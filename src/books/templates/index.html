@@ -4,6 +4,42 @@
 
 {% block content %}
 
+{% load static %}
+
+<div class='container-fluid my-3'>
+    <form class="form-inline my-2 my-lg-0" role='search', method='get', action="{% url 'home' %}">
+        <input class="form-control mr-sm-2" name='search' type="search" placeholder="Find yours" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+</div>
+
+<div class="container-fluid my-3">
+    <div class='row'>
+        {% if books %}
+            {% for book in books %}
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <div class="card mb-3" style="max-width:540px;">
+                        <div class="row no-gutters">
+                            <div class="col-md-4">
+                                <img class='img-thumbnail' src="{% static 'images/thumbnail2.jpg' %}" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                <h5 class="card-title font-weight-bold">{{ book.title }}</h5>
+                                <small><p class="card-text">{{ book.author }} | {{ book.genre }}</p></small>
+                                <p class="card-text"><small class="text-muted">{{ book.quantity }} Left</small></p>
+                                <a href="#" class="btn btn-primary">Add to cart</a>
+                                <a href="#" class="btn btn-warning">Buy</a>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
 
 
-{% endblock content %}
+
+{% endblock %}

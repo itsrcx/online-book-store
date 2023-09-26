@@ -1,12 +1,12 @@
 from django.contrib import admin
-import books import models
+from books import models
 
-admin.site.register(models.Category)
+admin.site.register(models.Cart)
 
 class BooksAdmin(admin.ModelAdmin):
-    list_display =('title','category','price','quantity')
+    list_display =('title','author','genre','price','quantity')
     list_filter = ('status',)
-    search_fields = ['title','category']
-    # prepopulated_fields = {'slug':['title']}
+    search_fields = ['title','author','genre']
+    # prepopulated_fields = {}
 
-admin.site.register(models.Books, BooksAdmin)
+admin.site.register(models.Book, BooksAdmin)
