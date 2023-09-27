@@ -22,20 +22,20 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
+                {% if genre %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
                         Genres
                     </a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
+                        {% for item in genre %}  
+                        <a class="dropdown-item" href="{% url 'category' item.genre %}">{{ item.genre }}</a>
+                        {% endfor %}
                     </div>
                 </li>
+                {% endif %}
             </ul>
         </div>
-
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
                 {% if user.is_authenticated %}
@@ -61,5 +61,6 @@
         </div>
     </nav>
         {% block content %} {% endblock %}
+        
 </body>
 </html>

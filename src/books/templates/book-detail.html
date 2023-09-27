@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Book Detail{% endblock %}
+{% block title %}{{book.title}}{% endblock %}
 
 {% load static %}
 
@@ -17,12 +17,15 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">{{ book.title }}</h5>
+                    <h5 class="card-title text-success">{{ book.title }}</h5>
                     <p class="card-text">{{ book.description }}</p>
                     <p class="card-text">Author: {{ book.author }}</p>
                     <p class="card-text">Genre: {{ book.genre }}</p>
-                    <p class="card-text">Price: {{ book.price }}</p>
-                    <p class="card-text">Average Rating: {% if book.average_rating %}{{ book.average_rating|floatformat:1 }}/5.0{% else %}Not rated{% endif %}</p>
+                    <p class="card-text">Price: &#8377; {{ book.price }}</p>
+                    <p class="card-text">Average Rating: {% if book.average_rating %}{{ book.average_rating|floatformat:'0' }}&#9733; out of 5 &#9733;{% else %}Not rated{% endif %}</p>
+                    
+                    <a href="#" class="btn btn-warning">Buy</a>
+                    <a href="#" class="btn btn-primary">Add to Cart</a><br><br>
                     
                     <!-- Rating Form (Only for Logged-In Users) -->
                     {% if user.is_authenticated %}
@@ -35,7 +38,7 @@
                         <button type="submit" class="btn btn-primary">Submit Rating</button>
                     </form>
                     {% else %}
-                    <p class="text-info">Login to in to submit a rating.</p>
+                    <p class="text-info"><a href="{% url 'login' %}" class="">Login</a> to in to submit a rating.</p>
                     {% endif %}
                 </div>
             </div>
