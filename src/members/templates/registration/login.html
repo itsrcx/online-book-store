@@ -8,7 +8,7 @@
 
 <!--login--> 
 <div class="container py-5">
-        <h2 class="text-center"><b>Log In</b></h2>
+        <h2 class="text-center text-success"><b>Log In</b></h2>
     <form method="post">
         {% csrf_token %}
         <div class="form-row justify-content-center">
@@ -21,9 +21,23 @@
                 {{ form.password|as_crispy_field }}
             </div>
         </div>
+        <div class="form-row justify-content-center">
+            <div class="col-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="remember_me" id="remember_me">
+                    <label class="form-check-label" for="remember_me">
+                        Remember Me
+                    </label>
+                </div>
+            </div>
+        </div><br>
         <div class="text-center">
             <button class="btn px-4 btn-primary" type="submit">Log In</button>
         </div>
+        <br>
+        {% if form.errors %}
+        <p class="text-center"><b>Invalid Username or Password.</b> <span class="text-danger">Please try again.</span></p>
+        {% endif %}
     </form>
     <br><p class="text-center">Don't have an account? <a href="{% url 'signup' %}">Create an account</a></p>
 </div>

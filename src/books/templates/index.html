@@ -14,7 +14,9 @@
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
 </div>
-
+{% if error_message %}
+    <p class="error-message text-danger text-center"><b>{{ error_message }} &#128519;</b></p>
+{% endif %}
 <div class="container mt-4">
     <div class="row">
         <!-- Product Cards -->
@@ -38,6 +40,7 @@
 </div>
 
 <!-- Pagination Controls -->
+{% if books.has_other_pages %}
 <div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-md-4">
@@ -69,6 +72,6 @@
         </div>
     </div>
 </div>
-
+{% endif %}
 
 {% endblock %}

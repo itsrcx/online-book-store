@@ -5,7 +5,7 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container my-5 pt-3">
     <div class="row">
         <!-- Book Image (Left) -->
         <div class="col-md-4">
@@ -17,7 +17,7 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title text-success">{{ book.title }}</h5>
+                    <h4 class="card-title text-success">{{ book.title }}</h4>
                     <p class="card-text">{{ book.description }}</p>
                     <p class="card-text">Author: {{ book.author }}</p>
                     <p class="card-text">Genre: {{ book.genre }}</p>
@@ -38,7 +38,7 @@
                         <button type="submit" class="btn btn-primary">Submit Rating</button>
                     </form>
                     {% else %}
-                    <p class="text-info"><a href="{% url 'login' %}" class="">Login</a> to in to submit a rating.</p>
+                    <p class="text-info"><a href="{% url 'login' %}">Login</a> to in to submit a rating.</p>
                     {% endif %}
                 </div>
             </div>

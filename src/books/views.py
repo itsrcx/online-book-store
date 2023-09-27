@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.views import generic
 from .models import Book, Cart, Order, CustomerRating, ShippingAddress
 from django.db.models import Q
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, Page
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
 from .forms import *
@@ -13,17 +13,28 @@ def homeView(request):
     paginator = Paginator(books, 9)
     page = request.GET.get('page')
     books = paginator.get_page(page)
-    genre = Book.objects.values('genre').distinct()
+    genre = Book.objects.values('genre').distinct().order_by('genre')
     context = {'books': books, 'genre':genre}
     search_book = request.GET.get('search')
     if search_book:
         books = Book.objects.filter(Q(title__icontains=search_book)).distinct()
-        return render(request,'index.html',{'books': books })
+        paginator = Paginator(books, 9)
+        page = request.GET.get('page')
+        books = paginator.get_page(page)
+        genre = Book.objects.values('genre').distinct().order_by('genre')
+        if not books:
+            books = Book.objects.all()
+            paginator = Paginator(books, 9)
+            page = request.GET.get('page')
+            books = paginator.get_page(page)
+            error_message = "No Stories found try something else!"
+            return render(request, 'index.html', {'error_message': error_message, 'books': books, 'genre':genre})
+        return render(request,'index.html',{'books': books,'genre':genre })
     return render(request, 'index.html', context)
 
 def categoryView(request, cats):
     category_post = Book.objects.filter(genre=cats)
-    genre = Book.objects.values('genre').distinct()
+    genre = Book.objects.values('genre').distinct().order_by('genre')
     context = {'category_post':category_post, 'genre':genre}
     return render(request, 'category.html',context)
 
@@ -31,7 +42,7 @@ def categoryView(request, cats):
 
 def bookDetail(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
-    genre = Book.objects.values('genre').distinct()
+    genre = Book.objects.values('genre').distinct().order_by('genre')
     context = {'book': book, 'genre':genre}
     return render(request, 'book-detail.html', context)
     
