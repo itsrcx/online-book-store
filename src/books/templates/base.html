@@ -40,9 +40,13 @@
             <ul class="navbar-nav ml-auto">
                 {% if user.is_authenticated %}
                 <li class="nav-item">
+                    <a class="nav-link">
+                        <strong>&#9755; {{ user.username }}</strong>
+                    </a>
+                </li>
+                <li class="nav-item">
                 <a class="nav-link" href="{% url 'logout' %}">
                     <i class="fas fa-sign-out-alt"></i> Logout</a>
-                </li>
                 </li>
                 <li class="nav-item">
                 <a class="nav-link" href="{% url 'cart' %}">
