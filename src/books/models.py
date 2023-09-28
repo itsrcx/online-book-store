@@ -12,7 +12,7 @@ class Book(models.Model):
     title  		 = models.CharField(max_length=200)
     author 		 = models.CharField(max_length=100)
     genre   	 = models.CharField(max_length=100)
-    price  		 = models.FloatField(default=0)
+    price     	 = models.FloatField(default=0)
     quantity   	 = models.IntegerField(default=0)
     description  = models.TextField(default='No Description', null=True, blank=False)
     average_rating  = models.FloatField(default=0)
@@ -27,41 +27,27 @@ class Book(models.Model):
 
     def __str__(self):
         return self.title
-
-
-# class Customer(models.Model):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
-#     name = models.CharField(max_length=200, null=True)
-#     email = models.CharField(max_length=200, null=True)
-    
-#     def __str__(self):
-#         return self.name
     
 
-class CustomerRating(models.Model):
-    user   	= models.ForeignKey(User,on_delete=models.CASCADE) 
-    book 	= models.ForeignKey(Book,on_delete=models.CASCADE)
-    rating 	= models.IntegerField(default=1,validators=[MaxValueValidator(5),MinValueValidator(0)])
-
-    def __str__(self):
-        return f"{self.user.username} - {self.book.title}: {self.rating}"
-    
-
-class Order(models.Model):
-    customer = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
-    order_date = models.DateTimeField(auto_now_add=True)
-    complete = models.BooleanField(default=False, null=True, blank=False)
-    transaction_id = models.CharField(max_length=200, null=True)
-    
-    def __str__(self):
-        return str(self.id)
-    
 class Cart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     books = models.ForeignKey(Book, on_delete=models.SET_NULL, blank=True, null=True)
-    order = models.ForeignKey(Order, on_delete=models.SET_NULL, blank=True, null=True)
     quantity = models.IntegerField(default=0, null=True, blank=True)
     date_added = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.user.username}'s cart item: {self.book.title}"
+        
+
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
+    items = models.ManyToManyField(Cart)
+    order_date = models.DateTimeField(auto_now_add=True)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    complete = models.BooleanField(default=False, null=True, blank=False)
+    
+    def __str__(self):
+        return f"Order {self.id} by {self.user.username}"
     
 class ShippingAddress(models.Model):
     customer = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
@@ -74,3 +60,21 @@ class ShippingAddress(models.Model):
 
     def __str__(self):
         return str(self.address)
+    
+class Checkout(models.Model):
+    order = models.OneToOneField(Order, on_delete=models.CASCADE)
+    payment_status = models.CharField(max_length=50)
+    payment_method = models.CharField(max_length=50)
+    transaction_id = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"Checkout for Order {self.order.id}"
+
+
+class CustomerRating(models.Model):
+    user   	= models.ForeignKey(User,on_delete=models.CASCADE) 
+    book 	= models.ForeignKey(Book,on_delete=models.CASCADE)
+    rating 	= models.IntegerField(default=1,validators=[MaxValueValidator(5),MinValueValidator(0)])
+
+    def __str__(self):
+        return f"{self.user.username} - {self.book.title}: {self.rating}"

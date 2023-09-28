@@ -1,20 +1,29 @@
 import csv
 from .models import Book  
+def import_data_from_csv(file_path):
+    try:
+        with open(file_path, 'r', encoding='utf-8') as csv_file:
+            csv_reader = csv.DictReader(csv_file)
+            for row in csv_reader:
+                title = row['title']
+                author = row['author']
+                genre = row['genre']
+                price = float(row['price'])
+                quantity = int(row['quantity'])
+                description = row['description']
 
-def insert_books_from_csv(csv_file):
-    with open(csv_file, 'r') as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            # Create a Book object and save it to the database
-            book = Book(
-                title=row['Book Title'],
-                author=row['Author Name'],
-                genre=row['Genre'],
-                price=row['Price (INR)'],
-                quantity=row['Quantity']
-            )
-            book.save()
+                # Create a new instance of your model
+                book = Book(
+                    title=title,
+                    author=author,
+                    genre=genre,
+                    price=price,
+                    quantity=quantity,
+                    description=description
+                )
+                book.save()  # Save the model instance to the database
 
-if __name__ == '__main__':
-    csv_file_path = '/home/applify/book-data.csv'  # Replace with the actual path to your CSV file
-    insert_books_from_csv(csv_file_path)
+        return True, "Data imported successfully."
+
+    except Exception as e:
+        return False, str(e)

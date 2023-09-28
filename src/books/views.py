@@ -6,10 +6,11 @@ from django.core.paginator import Paginator, Page
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
 from .forms import *
+from django.contrib import messages
 
 
 def homeView(request):
-    books = Book.objects.all()
+    books = Book.objects.all().order_by('title')
     paginator = Paginator(books, 9)
     page = request.GET.get('page')
     books = paginator.get_page(page)
@@ -33,7 +34,7 @@ def homeView(request):
     return render(request, 'index.html', context)
 
 def categoryView(request, cats):
-    category_post = Book.objects.filter(genre=cats)
+    category_post = Book.objects.filter(genre=cats).order_by('title')
     genre = Book.objects.values('genre').distinct().order_by('genre')
     context = {'category_post':category_post, 'genre':genre}
     return render(request, 'category.html',context)
@@ -63,41 +64,113 @@ def submitRating(request, book_id):
         book.save()
     return redirect('book_detail', book_id=book_id)
 
+@login_required
+def cart_view(request):
+    cart_items = Cart.objects.filter(user=request.user).order_by('-date_added')
+    genre = Book.objects.values('genre').distinct().order_by('genre')
+    if not cart_items:
+        messages.error(request, 'Add at least one Story to your cart!')
+        return redirect('home')
+    total_amount = 0
+    for cart_item in cart_items:
+        total_amount += cart_item.books.price * cart_item.quantity
+    return render(request, 'shopping/cart.html', {'cart_items': cart_items, 'cart_total': total_amount, 'genre':genre})
 
 
 @login_required
-def cartView(request):
-    cart_items = Cart.objects.filter(user=request.user)
-    cart_total = calculateCartTotal(cart_items)
-    form = UpdateCartForm()
-    context = {
-        'cart_items': cart_items,
-        'cart_total': cart_total,
-        'form': form,
-    }
-    return render(request, 'shopping/cart.html', context)
+def add_to_cart(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
 
-def calculateCartTotal(cart_items):
-    total = 0
-    for item in cart_items:
-        total += item.books.price * item.quantity
-    return total
+    try:
+        quantity = int(request.POST.get('quantity', 1))
+        if quantity < 1:
+            raise ValueError()
+    except (TypeError, ValueError):
+        messages.error(request, 'Please enter a valid quantity.')
+        return redirect('cart') # (book_id=book_id) add to redirectio to detail
+
+    if book.quantity < quantity:
+        messages.error(request, 'The requested quantity exceeds the available stock.')
+        return redirect('cart')
+
+    user = request.user
+    existing_cart_item = Cart.objects.filter(user=user, books=book).first()
+    
+    if existing_cart_item:
+        existing_cart_item.quantity += quantity
+        existing_cart_item.save()
+    else:
+        cart_item = Cart(user=user, books=book, quantity=quantity)
+        cart_item.save()
+
+    book.quantity -= quantity
+    book.save()
+    
+    messages.success(request, f'Added {quantity} {book.title} to the cart.')
+    return redirect('home')
 
 @login_required
-def cartUpdate(request, item_id):
-    cart_item = get_object_or_404(Cart, id=item_id, user=request.user)
+def remove_from_cart(request, item_id):
+    cart_item = get_object_or_404(Cart, pk=item_id, user=request.user)
+
+    if cart_item.user == request.user:
+        cart_quantity = cart_item.quantity
+        book = cart_item.books
+
+        cart_item.delete()
+        book.quantity += cart_quantity
+        book.save()
+        
+        messages.success(request, 'Book removed from cart successfully.')
+    
+    return redirect('cart')
+
+@login_required
+def update_cart(request, item_id):
+    cart_item = get_object_or_404(Cart, pk=item_id, user=request.user)
     if request.method == 'POST':
-        form = UpdateCartForm(request.POST, instance=cart_item)
-        if form.is_valid():
-            form.save()
+        new_quantity = int(request.POST.get('quantity'))
+        if new_quantity <= 0:
+                messages.error(request, 'Please enter a valid quantity.')
+        elif new_quantity > cart_item.books.quantity:
+            messages.error(request, 'The requested quantity exceeds the available quantity.')
+        else:
+            change_in_quantity = new_quantity - cart_item.quantity
+            cart_item.quantity = new_quantity
+            cart_item.save()
+            cart_item.books.quantity -= change_in_quantity
+            cart_item.books.save()
+            messages.success(request, 'Cart updated successfully.')
+    
     return redirect('cart')
 
 @login_required
-def cartRemove(request, item_id):
-    cart_item_to_remove = get_object_or_404(Cart, id=item_id, user=request.user)
-    cart_item_to_remove.delete()
-    return redirect('cart')
-
 def checkoutView(request):
-    context = {}
-    return render(request, 'index.html', context)
+    user = request.user
+    cart_items = Cart.objects.filter(user=user)
+    # Calculate the total amount
+    total_amount = sum(item.books.price * item.quantity for item in cart_items)
+
+    if request.method == 'POST':
+        form = CheckoutForm(request.POST)
+        if form.is_valid():
+            # Process the order and create a new order record
+            order = Order.objects.create(user=user, total_amount=total_amount)
+            for cart_item in cart_items:
+                order.items.add(cart_item)
+            order.save()
+
+            # Clear the user's cart
+            cart_items.delete()
+
+            return redirect('order_confirmation', order_id=order.id)
+
+    else:
+        form = CheckoutForm()
+
+    context = {
+        'form': form,
+        'cart_items': cart_items,
+        'total_amount': total_amount,
+    }
+    return render(request, 'shopping/checkout.html', context)

@@ -1,15 +1,43 @@
+{% extends 'base.html' %}
+<a  class="btn btn-outline-dark" href="{% url 'cart' %}">&#x2190; Back to Cart</a>
+{% load static %}
 
-<div class="box-element">
-	<a  class="btn btn-outline-dark" href="{% url 'cart' %}">&#x2190; Back to Cart</a>
-	<hr>
-	<h3>Order Summary</h3>
-	<hr>
-	<div class="cart-row">
-		<div style="flex:2"><img class="row-image" src="{% static 'images/placeholder.png' %}"></div>
-		<div style="flex:2"><p>Product 1</p></div>
-		<div style="flex:1"><p>$20.00</p></div>
-		<div style="flex:1"><p>x2</p></div>
-	</div>
-	<h5>Items:   2</h5>
-	<h5>Total:   $40</h5>
+{% block content %}
+
+<div class="container mt-5 p-4 shadow" style="background-color:rgb(248, 245, 245)">
+	<a class="btn btn-outline-dark " href="{% url 'cart' %}">&#x2190; Back to Cart</a>
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h2 class="mb-4 text-center text-success"><b>Checkout & Place order</b></h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="shipping_address">Shipping Address</label>
+                    <textarea class="form-control" id="shipping_address" name="shipping_address" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="payment_method">Payment Method</label>
+                    <select class="form-control" id="payment_method" name="payment_method" required>
+                        <option value="credit_card">Credit Card</option>
+                        <option value="paypal">PayPal</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="card_number">Card Number</label>
+                    <input type="text" class="form-control" id="card_number" name="card_number" required>
+                </div>
+                <div class="form-group">
+                    <label for="expiration_date">Expiration Date</label>
+                    <input type="text" class="form-control" id="expiration_date" name="expiration_date" placeholder="MM/YYYY" required>
+                </div>
+                <div class="form-group">
+                    <label for="cvv">CVV</label>
+                    <input type="text" class="form-control" id="cvv" name="cvv" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Place Order</button>
+            </form>
+        </div>
+    </div>
 </div>
+
+{% endblock %}

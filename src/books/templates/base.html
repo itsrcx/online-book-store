@@ -97,6 +97,20 @@
     </div>
 </footer>
         
-        
+
+
+<script>
+    $(document).ready(function() {
+        // Check if there are messages with the "error" class
+        var errorMessages = $('.alert.error');
+        if (errorMessages.length > 0) {
+            // Show the error messages in pop-ups
+            errorMessages.each(function() {
+                alert($(this).text()); // Display as an alert
+            });
+        }
+    });
+</script>
+
 </body>
 </html>
