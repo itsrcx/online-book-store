@@ -6,7 +6,10 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
 from .forms import *
 from django.contrib import messages
+from django.http import HttpResponseNotFound
 
+def catch_all_view(request):
+    return HttpResponseNotFound("You know this page doesn't exist. 	&#128521; #404")
 
 def homeView(request):
     books = Book.objects.all().order_by('title')
@@ -149,6 +152,7 @@ def calculateCartTotal(cart_items):
         total += item.books.price * item.quantity
     return total
 
+
 @login_required
 def checkoutView(request):
     user = request.user
@@ -177,15 +181,16 @@ def checkoutView(request):
             order_history = OrderHistory(
                 user=user,
                 items=order.items.all(),
-                order=order,
-                order_quantity=sum(item.quantity for item in cart_items),
-                total_amount=total_amount,
+                order_date=order.order_date,
+                order_quantity=cart_items.count(),
+                total_amount=order.total_amount,
                 shipping_address=shipping_address
             )
             order_history.save()
 
             cart_items.delete()
 
+            messages.success(request, 'Order placed successfully!')
             return redirect('order_history')
     else:
         form = ShippingAddressForm(instance=default_shipping_address)

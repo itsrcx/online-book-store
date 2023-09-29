@@ -3,6 +3,10 @@ from django.views import generic
 from .forms import NewUserForm
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
+from django.http import HttpResponseNotFound
+
+def catch_all_view(request):
+    return HttpResponseNotFound("You know this page doesn't exist. 	&#128521; #404")
 
 class UserRegistraion(generic.CreateView):
     form_class = NewUserForm

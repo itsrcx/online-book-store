@@ -2,30 +2,39 @@
 
 {% block content %}
 
-<h1>Order History</h1>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Order Date</th>
-            <th>Order Quantity</th>
-            <th>Total Amount</th>
-            <th>Shipping Address</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for order in order_history %}
-            <tr>
-                <td>{{ order.order_date }}</td>
-                <td>{{ order.order_quantity }}</td>
-                <td>${{ order.total_amount }}</td>
-                <td>{{ order.shipping_address }}</td>
-            </tr>
-        {% empty %}
-            <tr>
-                <td colspan="4">No order history available.</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% block title %}Order History{% endblock %}
 
+<div class="container my-5">
+    <div class="card">
+        <div class="card-header h3 text-success text-center">
+            Order History
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Order Date</th>
+                        <th>Order Quantity</th>
+                        <th>Total Amount</th>
+                        <th>Shipping Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in order_history %}
+                        <tr>
+                            <td>{{ order.order_date }}</td>
+                            <td>{{ order.order_quantity }}</td>
+                            <td>${{ order.total_amount }}</td>
+                            <td>{{ order.shipping_address }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4">No order history available.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -1,7 +1,9 @@
-# online-book-store (StoryKeeper)
-<h3>First thing first</h3>
+# StoryKeeper
+
+<b>First thing first</b>
 <p>Create a virtual environment</p>
-Run <code>pip install -r requirements.txt</code>
+Run <code>pip install -r requirements.txt</code><br>
+
 <b>To use mysql as db:</b>
 
 - <p>uncomment: mysql databse in <code>settins.py</code> and comment sqlite3 database</p>
@@ -21,7 +23,7 @@ Run <code>pip install -r requirements.txt</code>
 -  <p>run <code>makemigrations</code> and <code>migrate</code> commands in terminal</p>
 -  <p>create a <code>superuser</code> and add data manually to MySql DB</p>
 
--  <p>run management command <code>python manage.py import_csv_data patch/to/csv</p>
+-  <p>run management command <code>python manage.py import_csv_data patch/to/csv</code></p>
    <p>csv provided in <code>src</code></p>
 
 -  if you want to use google authentecation: 
@@ -31,4 +33,5 @@ Run <code>pip install -r requirements.txt</code>
 
 
 -  other imp. stuff
-     - you can change session time fro member.forms to play with
+    - you can change session time from <code>member.forms</code> to play with
+    - fork if you want to contribute.

@@ -28,7 +28,7 @@
                         <p class="card-text">Average Rating: {% if book.average_rating %}{{ book.average_rating|floatformat:'0' }}&#9733; out of 5 &#9733;{% else %}Not rated{% endif %}</p>
                     </b></small><br>
                     <div class="d-flex">
-                        <a href="#" class="btn btn-warning mr-2">Buy</a>
+                        <a href="{% url 'cart' %}" class="btn btn-warning mr-2">Buy</a>
                         <form method="post" action="{% url 'add_to_cart' book.id %}">
                             {% csrf_token %}
                             {{ cart_form|crispy }}
