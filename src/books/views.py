@@ -144,33 +144,80 @@ def update_cart(request, item_id):
     
     return redirect('cart')
 
+def calculateCartTotal(cart_items):
+    total = 0
+    for item in cart_items:
+        total += item.books.price * item.quantity
+    return total
+
 @login_required
 def checkoutView(request):
     user = request.user
     cart_items = Cart.objects.filter(user=user)
-    # Calculate the total amount
-    total_amount = sum(item.books.price * item.quantity for item in cart_items)
+    total_amount = calculateCartTotal(cart_items)
+    try:
+        default_shipping_address = ShippingAddress.objects.get(customer=user, is_default=True)
+    except ShippingAddress.DoesNotExist:
+        default_shipping_address = None
+
+    other_shipping_addresses = ShippingAddress.objects.filter(customer=user, is_default=False)
 
     if request.method == 'POST':
-        form = CheckoutForm(request.POST)
+        form = ShippingAddressForm(request.POST)
         if form.is_valid():
-            # Process the order and create a new order record
-            order = Order.objects.create(user=user, total_amount=total_amount)
-            for cart_item in cart_items:
-                order.items.add(cart_item)
+            shipping_address = form.save(commit=False)
+            shipping_address.customer = user
+            shipping_address.save()
+            ShippingAddress.objects.filter(customer=user).exclude(id=shipping_address.id).update(is_default=False)
+
+            order = Order(user=user, total_amount=total_amount)
             order.save()
+            order.items.set(cart_items)
 
-            # Clear the user's cart
-            cart_items.delete()
-
-            return redirect('order_confirmation', order_id=order.id)
-
+            return redirect('checkout')
     else:
-        form = CheckoutForm()
+        form = ShippingAddressForm(instance=default_shipping_address)
 
     context = {
-        'form': form,
         'cart_items': cart_items,
         'total_amount': total_amount,
+        'form': form,
+        'shipping_address': default_shipping_address,
+        'other_addresses': other_shipping_addresses,
     }
+
     return render(request, 'shopping/checkout.html', context)
+
+
+@login_required
+def add_shipping_address(request):
+    if request.method == 'POST':
+        form = ShippingAddressForm(request.POST)
+        try:
+            if form.is_valid():
+                shipping_address = form.save(commit=False)
+                shipping_address.customer = request.user
+                shipping_address.is_default = True 
+                shipping_address.save()
+
+                ShippingAddress.objects.filter(customer=request.user).exclude(id=shipping_address.id).update(is_default=False)
+
+                messages.success(request, 'Shipping address added successfully.')
+            else:
+                messages.error(request, 'Invalid shipping address data. Please check your inputs.')
+        except Exception as e:
+            messages.error(request, 'An error occurred while adding the shipping address. Please try again later.')
+        return redirect('checkout')  
+    else:
+        form = ShippingAddressForm()
+    
+    return render(request, 'shopping/add-address.html', {'form': form})
+
+
+def set_default_address(request, address_id):
+    address = get_object_or_404(ShippingAddress, pk=address_id, customer=request.user)
+    address.is_default = True
+    address.save()
+    ShippingAddress.objects.filter(customer=request.user).exclude(pk=address_id).update(is_default=False)
+    messages.success(request, 'Default address set successfully.')
+    return redirect('checkout')

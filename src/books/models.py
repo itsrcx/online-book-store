@@ -57,12 +57,13 @@ class ShippingAddress(models.Model):
     state = models.CharField(max_length=200, null=True)
     zipcode = models.CharField(max_length=200, null=True)
     date_added = models.DateTimeField(auto_now_add=True)
+    is_default = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.address)
     
 class Checkout(models.Model):
-    order = models.OneToOneField(Order, on_delete=models.CASCADE)
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, unique=True)
     payment_status = models.CharField(max_length=50)
     payment_method = models.CharField(max_length=50)
     transaction_id = models.CharField(max_length=100)

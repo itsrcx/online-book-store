@@ -1,41 +1,83 @@
 {% extends 'base.html' %}
-<a  class="btn btn-outline-dark" href="{% url 'cart' %}">&#x2190; Back to Cart</a>
+
 {% load static %}
+{% load custom_filters %}
 
 {% block content %}
 
-<div class="container mt-5 p-4 shadow" style="background-color:rgb(248, 245, 245)">
-	<a class="btn btn-outline-dark " href="{% url 'cart' %}">&#x2190; Back to Cart</a>
+<div class="container-fluid my-5">
     <div class="row">
-        <div class="col-md-6 offset-md-3">
-            <h2 class="mb-4 text-center text-success"><b>Checkout & Place order</b></h2>
-            <form method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="shipping_address">Shipping Address</label>
-                    <textarea class="form-control" id="shipping_address" name="shipping_address" rows="3" required></textarea>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header h3">
+                    Shipping Address
+                    <a href="{% url 'add_shipping_address' %}" class="btn btn-primary float-right">Add Address</a>
                 </div>
-                <div class="form-group">
-                    <label for="payment_method">Payment Method</label>
-                    <select class="form-control" id="payment_method" name="payment_method" required>
-                        <option value="credit_card">Credit Card</option>
-                        <option value="paypal">PayPal</option>
-                    </select>
+                <div class="card-body">
+                    <form method="POST" class="shipping-address-form">
+                        {% csrf_token %}
+                        <h4>Default Shipping Address:</h4>
+                        <i><strong class="text-success">{{ shipping_address.address }}
+                            {{ shipping_address.city }},
+                            {{ shipping_address.state }},
+                            {{ shipping_address.zipcode }}
+                        </strong></i><br><br>
+                        <h4>Other Shipping Addresses:</h4>
+                        {% if other_addresses %}
+                            <ul class="list-group">
+                                {% for address in other_addresses %}
+                                <li class="list-group-item">
+                                    {{ address.address }},
+                                    {{ address.city }},
+                                    {{ address.state }},
+                                    {{ address.zipcode }}
+                                    {% if address.is_default %}
+                                    (Default)
+                                    {% else %}
+                                    <a href="{% url 'set_default_address' address.id %}" class="btn btn-link btn-sm text-success">Set as Default</a>
+                                    {% endif %}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                            <p>No other addresses available.</p>
+                            {% endif %}
+                        </select>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <label for="card_number">Card Number</label>
-                    <input type="text" class="form-control" id="card_number" name="card_number" required>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header h3">
+                    Order Summary
+                    <a  class="btn btn-outline-dark float-right" href="{% url 'cart' %}">&#x2190; Back to Cart</a>
                 </div>
-                <div class="form-group">
-                    <label for="expiration_date">Expiration Date</label>
-                    <input type="text" class="form-control" id="expiration_date" name="expiration_date" placeholder="MM/YYYY" required>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Book Name</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cart_item in cart_items %}
+                                <tr>
+                                    <td>{{ cart_item.books.title }}</td>
+                                    <td>{{ cart_item.quantity }}</td>
+                                    <td>&#8377; {{ cart_item.books.price }}</td>
+                                    <td><strong>&#8377; {{ cart_item|calculate_subtotal }}</strong></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <p class="mt-3 btn btn-success mr-3">Place Order &#8377; {{ total_amount }}</p>
+                    <p class="mt-3 btn btn-outline-dark text-bold float-right mr-3">Total: &#8377; {{ total_amount }}</p>
                 </div>
-                <div class="form-group">
-                    <label for="cvv">CVV</label>
-                    <input type="text" class="form-control" id="cvv" name="cvv" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Place Order</button>
-            </form>
+            </div>
         </div>
     </div>
 </div>
