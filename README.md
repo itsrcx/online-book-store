@@ -26,6 +26,7 @@ Run <code>pip install -r requirements.txt</code><br>
 -  <p>run management command <code>python manage.py import_csv_data patch/to/csv</code></p>
    <p>csv provided in <code>src</code></p>
 
+<b>Use of Google Auth</b> 
 -  if you want to use google authentecation: 
     - goto: https://developers.google.com/identity/protocols/oauth2 
     - login console and create project
