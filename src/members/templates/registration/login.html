@@ -1,12 +1,18 @@
 {% extends 'base.html' %}
 
+{% load socialaccount %}
+
 {% block title %}Log In{% endblock %}
+
+{% load static %}
 
 {% block content %}
 
 {% load crispy_forms_tags %}
 
-<!--login--> 
+{% if user.is_authenticated %}
+<strong><p class="text-bold text-success text-center mt-5">Welcome, {{ user.username }} !</p></strong>
+{% else %}
 <div class="container py-5">
         <h2 class="text-center text-success"><b>Log In</b></h2>
     <form method="post">
@@ -39,7 +45,15 @@
         <p class="text-center"><b>Invalid Username or Password.</b> <span class="text-danger">Please try again.</span></p>
         {% endif %}
     </form>
+    <div class="form-row justify-content-center">
+        <form action="{% provider_login_url 'google' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" style="background-color:transparent; border-color:transparent;"><img class="btn" src="{% static 'logos/g-btn.png' %}"></a></button>
+        </form>
+    </div>
     <br><p class="text-center">Don't have an account? <a href="{% url 'signup' %}">Create an account</a></p>
 </div>
+
+{% endif %}
 
 {% endblock content %}

@@ -21,7 +21,11 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'books',
     'members',
-    "crispy_forms", # making forms crispy
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    "crispy_forms", 
     "crispy_bootstrap4", 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -36,6 +40,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -136,3 +141,40 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 # when using pillow to uplaod image uncomment below lines
 # MEDIA_ROOT = BASE_DIR /'static/images'
 # MEDIA_URL = '/media/'
+
+# google authentication
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend'
+]
+
+
+AUTHENTICATION_CLASSES = (
+ 
+    'allauth.account.auth_backends.AuthenticationBackend',
+ 
+)
+
+SITE_ID = 1
+# Additional configuration settings
+
+SOCIALACCOUNT_QUERY_EMAIL = True
+ACCOUNT_LOGOUT_ON_GET= True
+SOCIAL_ACCOUNT_LOGIN_ON_GET = True
+ACCOUNT_UNIQUE_EMAIL = True
+# ACCOUNT_EMAIL_REQUIRED = True
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {
+            'access_type': 'offline',
+        },
+        'APP': {
+            'client_id': '',
+            'secret': '',
+            'key': ''
+        }
+    }
+}
