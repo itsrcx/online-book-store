@@ -14,101 +14,104 @@
     <title>{% block title %}Home{% endblock %}</title>
 </head>
 <body>
-<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light shadow px-5">
-    <a class="navbar-brand" href="{% url 'home' %}"><b>StoryKeeper</b></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            {% if genre %}
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
-                    Genres
-                </a>
-                <div class="dropdown-menu">
-                    {% for item in genre %}  
-                    <a class="dropdown-item" href="{% url 'category' item.genre %}">{{ item.genre }}</a>
-                    {% endfor %}
-                </div>
-            </li>
-            {% endif %}
-        </ul>
+<div class="d-flex flex-column min-vh-100">
+    <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light shadow px-5">
+        <a class="navbar-brand" href="{% url 'home' %}"><b>StoryKeeper</b></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                {% if genre %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+                        Genres
+                    </a>
+                    <div class="dropdown-menu">
+                        {% for item in genre %}  
+                        <a class="dropdown-item" href="{% url 'category' item.genre %}">{{ item.genre }}</a>
+                        {% endfor %}
+                    </div>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link">
+                        <strong>
+                            <i class="fas fa-user"></i>
+                            {{ user.username }}
+                        </strong>
+                    </a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">
+                    <i class="fas fa-sign-out-alt"></i> Logout</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'cart' %}">
+                    <i class="fa fa-cart-plus"></i> Cart</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">
+                    <i class="fas fa-sign-in-alt"></i> Login</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'signup' %}">
+                    <i class="fas fa-user-plus"></i> Signup</a>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    {% if messages %}
+    <div class="messages d-flex text-danger w-25 shadow">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
     </div>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ml-auto">
-            {% if user.is_authenticated %}
-            <li class="nav-item">
-                <a class="nav-link">
-                    <strong>
-                        <i class="fas fa-user"></i>
-                        {{ user.username }}
-                    </strong>
-                </a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="{% url 'logout' %}">
-                <i class="fas fa-sign-out-alt"></i> Logout</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="{% url 'cart' %}">
-                <i class="fa fa-cart-plus"></i> Cart</a>
-            </li>
-            {% else %}
-            <li class="nav-item">
-            <a class="nav-link" href="{% url 'login' %}">
-                <i class="fas fa-sign-in-alt"></i> Login</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="{% url 'signup' %}">
-                <i class="fas fa-user-plus"></i> Signup</a>
-            {% endif %}
-        </ul>
-    </div>
-</nav>
+    {% endif %}
+    <div class="container-fluid flex-grow-1">
         {% block content %} {% endblock %}
-        <footer id="pageFooter" class="footer text-dark py-5 mt-5" style="background-color:rgb(124, 212, 136);">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h4><b>About App</b></h4>
-                        <p>This is a evaluation project for the internship program.<br>
-                        This project is created with Django and Bootstrap</p>
-                    </div>
-                    <div class="col-md-3">
-                        <h4><b>Quick Links</b></h4>
-                        <ul class="list-unstyled">
-                            <li><a href="#" class="text-dark">&nbsp;&nbsp;Dummy link</a></li>
-                            <li><a href="#" class="text-dark">&nbsp;&nbsp;Dummy link</a></li>
-                            <li><a href="#" class="text-dark">&nbsp;&nbsp;Dummy link</a></li>
-                            <li><a href="#" class="text-dark">&nbsp;&nbsp;Dummy link</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-3">
-                        <h4><b>Contact Us</b></h4>
-                        <address>
-                            <p>&nbsp;<i class="fa fa-map-marker"></i> xyz</p>
-                            <p>&nbsp;<i class="fa fa-envelope"></i> info@xyz.com</p>
-                            <p>&nbsp;<i class="fa fa-phone"></i> +91 0000000000</p>
-                        </address>
-                    </div>
+    </div>
+    <footer id="pageFooter" class="footer text-dark py-5 mt-5" style="background-color:rgb(124, 212, 136);">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4><b>About App</b></h4>
+                    <p>This is a evaluation project for the internship program.<br>
+                    This project is created with Django and Bootstrap</p>
+                </div>
+                <div class="col-md-3">
+                    <h4><b>Quick Links</b></h4>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-dark">&nbsp;&nbsp;Dummy link</a></li>
+                        <li><a href="#" class="text-dark">&nbsp;&nbsp;Dummy link</a></li>
+                        <li><a href="#" class="text-dark">&nbsp;&nbsp;Dummy link</a></li>
+                        <li><a href="#" class="text-dark">&nbsp;&nbsp;Dummy link</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h4><b>Contact Us</b></h4>
+                    <address>
+                        <p>&nbsp;<i class="fa fa-map-marker"></i> xyz</p>
+                        <p>&nbsp;<i class="fa fa-envelope"></i> info@xyz.com</p>
+                        <p>&nbsp;<i class="fa fa-phone"></i> +91 0000000000</p>
+                    </address>
                 </div>
             </div>
-        </footer>
+        </div>
+    </footer>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        // Check if there are messages with the "error" class
-        var errorMessages = $('.alert.error');
-        if (errorMessages.length > 0) {
-            // Show the error messages in pop-ups
-            errorMessages.each(function() {
-                alert($(this).text()); // Display as an alert
-            });
-        }
-    });
-</script>
 
 
 </body>

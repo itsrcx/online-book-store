@@ -48,6 +48,7 @@ class Order(models.Model):
     
     def __str__(self):
         return f"Order {self.id} by {self.user.username}"
+
     
 class ShippingAddress(models.Model):
     customer = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
@@ -71,6 +72,16 @@ class Checkout(models.Model):
     def __str__(self):
         return f"Checkout for Order {self.order.id}"
 
+class OrderHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    items = models.ManyToManyField(Cart)
+    order_date = models.DateTimeField(auto_now_add=True)
+    order_quantity = models.IntegerField()
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    shipping_address = models.ForeignKey(ShippingAddress, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return f"Order {self.id} by {self.user.username} and Amount {self.total_amount}"
 
 class CustomerRating(models.Model):
     user   	= models.ForeignKey(User,on_delete=models.CASCADE) 

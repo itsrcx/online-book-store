@@ -13,5 +13,6 @@ urlpatterns = [
     path('cart/checkout', views.checkoutView, name='checkout'),
     path('add_address/', views.add_shipping_address, name='add_shipping_address'),
     path('set_default_address/<int:address_id>/', views.set_default_address, name='set_default_address'),
+    path('order_history/', views.order_history, name='order_history'),
 
 ]

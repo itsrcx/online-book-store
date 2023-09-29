@@ -1,8 +1,7 @@
 from django.shortcuts import redirect, render, get_object_or_404
-from django.views import generic
-from .models import Book, Cart, Order, CustomerRating, ShippingAddress
+from .models import Book, Cart, Order, CustomerRating, ShippingAddress, OrderHistory
 from django.db.models import Q
-from django.core.paginator import Paginator, Page
+from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
 from .forms import *
@@ -168,13 +167,26 @@ def checkoutView(request):
             shipping_address = form.save(commit=False)
             shipping_address.customer = user
             shipping_address.save()
+
             ShippingAddress.objects.filter(customer=user).exclude(id=shipping_address.id).update(is_default=False)
 
             order = Order(user=user, total_amount=total_amount)
             order.save()
             order.items.set(cart_items)
 
-            return redirect('checkout')
+            order_history = OrderHistory(
+                user=user,
+                items=order.items.all(),
+                order=order,
+                order_quantity=sum(item.quantity for item in cart_items),
+                total_amount=total_amount,
+                shipping_address=shipping_address
+            )
+            order_history.save()
+
+            cart_items.delete()
+
+            return redirect('order_history')
     else:
         form = ShippingAddressForm(instance=default_shipping_address)
 
@@ -213,7 +225,7 @@ def add_shipping_address(request):
     
     return render(request, 'shopping/add-address.html', {'form': form})
 
-
+@login_required
 def set_default_address(request, address_id):
     address = get_object_or_404(ShippingAddress, pk=address_id, customer=request.user)
     address.is_default = True
@@ -221,3 +233,17 @@ def set_default_address(request, address_id):
     ShippingAddress.objects.filter(customer=request.user).exclude(pk=address_id).update(is_default=False)
     messages.success(request, 'Default address set successfully.')
     return redirect('checkout')
+
+
+@login_required
+def order_history(request):
+    user = request.user
+    order_history = OrderHistory.objects.filter(user=user).order_by('-order_date')
+
+    valid_order_history = []
+    for order_entry in order_history:
+        if order_entry.order.user == user:
+            valid_order_history.append(order_entry)
+
+    context = {'order_history': valid_order_history}
+    return render(request, 'shopping/order-history.html', context)

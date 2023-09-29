@@ -5,6 +5,8 @@ from books import models
 
 # admin.site.register(models.CustomerRating)
 
+admin.site.register(models.OrderHistory)
+
 class BooksAdmin(admin.ModelAdmin):
     list_display =('title','author','genre','price','quantity','average_rating')
     list_filter = ('status',)
