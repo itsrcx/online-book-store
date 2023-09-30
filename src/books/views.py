@@ -8,8 +8,13 @@ from .forms import *
 from django.contrib import messages
 from django.http import HttpResponseNotFound
 
-def catch_all_view(request):
-    return HttpResponseNotFound("You know this page doesn't exist. 	&#128521; #404")
+def redirect_to_previous_page(request):
+    referring_url = request.META.get('HTTP_REFERER')
+
+    if referring_url:
+        return redirect(referring_url)
+    else:
+        return redirect('home')
 
 def homeView(request):
     books = Book.objects.all().order_by('title')
@@ -72,7 +77,7 @@ def cart_view(request):
     genre = Book.objects.values('genre').distinct().order_by('genre')
     if not cart_items:
         messages.error(request, 'Add at least one Story to your cart!')
-        return redirect('home')
+        return redirect_to_previous_page(request)
     total_amount = 0
     for cart_item in cart_items:
         total_amount += cart_item.books.price * cart_item.quantity
@@ -89,11 +94,11 @@ def add_to_cart(request, book_id):
             raise ValueError()
     except (TypeError, ValueError):
         messages.error(request, 'Please enter a valid quantity.')
-        return redirect('cart') # (book_id=book_id) add to redirectio to detail
+        return redirect_to_previous_page(request) # (book_id=book_id) add to redirectio to detail
 
     if book.quantity < quantity:
         messages.error(request, 'The requested quantity exceeds the available stock.')
-        return redirect('cart')
+        return redirect_to_previous_page(request)
 
     user = request.user
     existing_cart_item = Cart.objects.filter(user=user, books=book).first()
@@ -109,7 +114,7 @@ def add_to_cart(request, book_id):
     book.save()
     
     messages.success(request, f'Added {quantity} {book.title} to the cart.')
-    return redirect('home')
+    return redirect_to_previous_page(request)
 
 @login_required
 def remove_from_cart(request, item_id):
