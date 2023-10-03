@@ -25,14 +25,14 @@ def homeView(request):
     context = {'books': books, 'genre':genre}
     search_book = request.GET.get('search')
     if search_book:
-        books = Book.objects.filter(Q(title__icontains=search_book)).distinct()
+        books = Book.objects.filter(Q(title__icontains=search_book)|Q(author__icontains=search_book)).distinct()
         paginator = Paginator(books, 9)
         page = request.GET.get('page')
         books = paginator.get_page(page)
         genre = Book.objects.values('genre').distinct().order_by('genre')
         if not books:
             books = Book.objects.all()
-            paginator = Paginator(books, 9)
+            paginator = Paginator(books, 5)
             page = request.GET.get('page')
             books = paginator.get_page(page)
             error_message = "No Stories found try something else!"
@@ -43,22 +43,25 @@ def homeView(request):
 def categoryView(request, cats):
     category_post = Book.objects.filter(genre=cats).order_by('title')
     genre = Book.objects.values('genre').distinct().order_by('genre')
-    context = {'category_post':category_post, 'genre':genre}
+    paginator = Paginator(category_post, 10)
+    page = request.GET.get('page')
+    books = paginator.get_page(page)
+    context = {'category_post':category_post,'books':books, 'genre':genre}
     return render(request, 'category.html',context)
 
 
 
-def bookDetail(request, book_id):
-    book = get_object_or_404(Book, pk=book_id)
+def bookDetail(request, slug):
+    book = get_object_or_404(Book, slug=slug)
     genre = Book.objects.values('genre').distinct().order_by('genre')
     context = {'book': book, 'genre':genre}
     return render(request, 'book-detail.html', context)
     
 @login_required
-def submitRating(request, book_id):
+def submitRating(request, slug):
     if request.method == 'POST':
         rating_value = float(request.POST.get('rating'))
-        book = get_object_or_404(Book, pk=book_id)
+        book = get_object_or_404(Book, slug=slug)
         existing_rating = CustomerRating.objects.filter(user=request.user, book=book).first()
         if existing_rating:
             existing_rating.rating = rating_value
@@ -69,7 +72,7 @@ def submitRating(request, book_id):
         average_rating = CustomerRating.objects.filter(book=book).aggregate(Avg('rating'))['rating__avg']
         book.average_rating = average_rating
         book.save()
-    return redirect('book_detail', book_id=book_id)
+    return redirect('book_detail', slug=slug)
 
 @login_required
 def cart_view(request):
@@ -85,8 +88,8 @@ def cart_view(request):
 
 
 @login_required
-def add_to_cart(request, book_id):
-    book = get_object_or_404(Book, pk=book_id)
+def add_to_cart(request, slug):
+    book = get_object_or_404(Book, slug=slug)
 
     try:
         quantity = int(request.POST.get('quantity', 1))
@@ -94,7 +97,11 @@ def add_to_cart(request, book_id):
             raise ValueError()
     except (TypeError, ValueError):
         messages.error(request, 'Please enter a valid quantity.')
-        return redirect_to_previous_page(request) # (book_id=book_id) add to redirectio to detail
+        return redirect_to_previous_page(request) 
+
+    if book.quantity < 1:
+        messages.error(request, 'Book Out of stock.')
+        return redirect_to_previous_page(request)
 
     if book.quantity < quantity:
         messages.error(request, 'The requested quantity exceeds the available stock.')

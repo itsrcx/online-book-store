@@ -8,9 +8,9 @@ from books import models
 admin.site.register(models.OrderHistory)
 
 class BooksAdmin(admin.ModelAdmin):
-    list_display =('title','author','genre','price','quantity','average_rating')
+    list_display =('title','author','genre','price','quantity')
     list_filter = ('status',)
     search_fields = ['title','author','genre']
-    # prepopulated_fields = {}
+    prepopulated_fields = {'slug':('title',)}
 
 admin.site.register(models.Book, BooksAdmin)

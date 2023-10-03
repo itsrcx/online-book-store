@@ -24,9 +24,9 @@
         {% for book in category_post %}
         <div class="col-md-4 mb-4">
             <div class="card product-card">
-                <a href="{% url 'book_detail' book.id %}"><img src="{% static 'images/thumbnail.jpg' %}" class="card-img-top" alt="{{ book.title }}"></a>
+                <a href="{% url 'book_detail' book.slug %}"><img src="{% static 'images/thumbnail.jpg' %}" class="card-img-top" alt="{{ book.title }}"></a>
                 <div class="card-body">
-                    <a href="{% url 'book_detail' book.id %}"class="text-success" ><h5 class="card-title">{{ book.title }}</h5></a>
+                    <a href="{% url 'book_detail' book.slug %}"class="text-success" ><h5 class="card-title">{{ book.title }}</h5></a>
                     <small>
                         <p class="card-text text-info">{{ book.genre }} | <span class="card-text">By: {{ book.author }}</span></p></small><br>
                         <small class="text-bold">
@@ -35,7 +35,7 @@
                             <p class="card-text">Average Rating: {% if book.average_rating %}{{ book.average_rating|floatformat:'0' }} &#9733; out of 5 &#9733;{% else %}Not rated{% endif %}</p>
                         </small><br>
                     <div class="d-flex">
-                        <form method="post" action="{% url 'add_to_cart' book.id %}">
+                        <form method="post" action="{% url 'add_to_cart' book.slug %}">
                             {% csrf_token %}
                             {{ cart_form|crispy }}
                             <button type="submit" class="btn btn-primary">Add to Cart</button>
@@ -49,40 +49,6 @@
     </div>
 </div>
 
-<!-- Pagination Controls -->
-{% if is_paginated %}
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-4">
-            <ul class="pagination justify-content-center">
-                {% if books.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page=1">&#8676; First</a>
-                    </li>
-                {% endif %}
-                {% if books.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ books.previous_page_number }}">&#8668; Previous</a>
-                    </li>
-                {% endif %}
-                <li class="page-item disabled">
-                    <span class="page-link">Page {{ books.number }} of {{ books.paginator.num_pages }}</span>
-                </li>
-                {% if books.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ books.next_page_number }}">Next &#8669;</a>
-                    </li>
-                {% endif %}
-                {% if books.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ books.paginator.num_pages }}">Last &#8677;</a>
-                    </li>
-                {% endif %}
-            </ul>
-        </div>
-    </div>
-</div>
-{% endif %}
 {% else %}
     <div class="my-4">
         <strong class="text-danger my-4"><H3>Sorry no books available. </H3></strong>

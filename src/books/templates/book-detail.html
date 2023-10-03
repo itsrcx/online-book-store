@@ -15,7 +15,6 @@
                 <img src="{% static 'images/thumbnail.jpg' %}" class="img-fluid" alt="{{ book.title }}">
             </div>
         </div>
-        <!-- Book Information and Rating (Right) -->
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
@@ -29,7 +28,7 @@
                     </b></small><br>
                     <div class="d-flex">
                         <a href="{% url 'cart' %}" class="btn btn-warning mr-2">Buy</a>
-                        <form method="post" action="{% url 'add_to_cart' book.id %}">
+                        <form method="post" action="{% url 'add_to_cart' book.slug %}">
                             {% csrf_token %}
                             {{ cart_form|crispy }}
                             <button type="submit" class="btn btn-primary">Add to Cart</button>
@@ -38,7 +37,7 @@
                     
                     <!-- Rating Form (Only for Logged-In Users) -->
                     {% if user.is_authenticated %}
-                    <form method="post" action="{% url 'submit_rating' book.id %}">
+                    <form method="post" action="{% url 'submit_rating' book.slug %}">
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="rating">Give a Rating (0-5):</label>

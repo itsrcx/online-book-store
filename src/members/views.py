@@ -1,4 +1,3 @@
-from django.shortcuts import render, redirect
 from django.views import generic
 from .forms import NewUserForm
 from django.urls import reverse_lazy
