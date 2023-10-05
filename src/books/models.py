@@ -7,10 +7,7 @@ from django.dispatch import receiver
 
     
 # form publishing/adding new book
-status = (
-    (0, "Draft"),
-    (1, "Publish")
-)
+
 class Genre(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100, unique=True)
@@ -19,12 +16,16 @@ class Genre(models.Model):
 
  
 class Book(models.Model):
+    status = (
+    (0, "Draft"),
+    (1, "Publish")
+    )
     title  		 = models.CharField(max_length=200)
     slug         = models.SlugField(max_length=140, unique=True)
     author 		 = models.CharField(max_length=100)
     genre        = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True, blank=True)    
     price     	 = models.FloatField(default=0)
-    quantity   	 = models.IntegerField(default=0)
+    quantity   	 = models.PositiveIntegerField()
     description  = models.TextField(default='No Description', null=True, blank=False)
     average_rating  = models.FloatField(default=0)
     created_on 	 = models.DateTimeField(auto_now_add=True)
@@ -58,7 +59,7 @@ class Book(models.Model):
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     books = models.ForeignKey(Book, on_delete=models.SET_NULL, blank=True, null=True)
-    quantity = models.IntegerField(default=0, null=True, blank=True)
+    quantity = models.PositiveIntegerField(null=True, blank=True)
     date_added = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
@@ -66,19 +67,29 @@ class Cart(models.Model):
         
 
 class Order(models.Model):
+    PAYMENT_METHOD_CHOICES = (
+    ('cash_on_delivery', 'Cash on Delivery'),
+    ('card_payment', 'Card Payment'),
+    ('upi_payment', 'UPI Payment'),
+    )
     user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
-    items = models.ManyToManyField(Cart)
+    items = models.ManyToManyField(Book)
     order_date = models.DateTimeField(auto_now_add=True)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    complete = models.BooleanField(default=False, null=True, blank=False)
+    is_complete = models.BooleanField(default=False, null=True, blank=False)
+    payment_method = models.CharField(max_length=20, choices=PAYMENT_METHOD_CHOICES, null=True, blank=True) 
     
     def __str__(self):
         return f"Order {self.id} by {self.user.username}"
 
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    books = models.ForeignKey(Book, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+
     
 class ShippingAddress(models.Model):
-    customer = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
-    order = models.ForeignKey(Order, on_delete=models.SET_NULL, blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)    
     address = models.CharField(max_length=200, null=True)
     city = models.CharField(max_length=200, null=True)
     state = models.CharField(max_length=200, null=True)

@@ -171,20 +171,20 @@ def checkoutView(request):
     cart_items = Cart.objects.filter(user=user)
     total_amount = calculateCartTotal(cart_items)
     try:
-        default_shipping_address = ShippingAddress.objects.get(customer=user, is_default=True)
+        default_shipping_address = ShippingAddress.objects.get(user=user, is_default=True)
     except ShippingAddress.DoesNotExist:
         default_shipping_address = None
 
-    other_shipping_addresses = ShippingAddress.objects.filter(customer=user, is_default=False)
+    other_shipping_addresses = ShippingAddress.objects.filter(user=user, is_default=False)
 
     if request.method == 'POST':
         form = ShippingAddressForm(request.POST)
         if form.is_valid():
             shipping_address = form.save(commit=False)
-            shipping_address.customer = user
+            shipping_address.user = user
             shipping_address.save()
 
-            ShippingAddress.objects.filter(customer=user).exclude(id=shipping_address.id).update(is_default=False)
+            ShippingAddress.objects.filter(user=user).exclude(id=shipping_address.id).update(is_default=False)
 
             order = Order(user=user, total_amount=total_amount)
             order.save()
@@ -225,11 +225,11 @@ def add_shipping_address(request):
         try:
             if form.is_valid():
                 shipping_address = form.save(commit=False)
-                shipping_address.customer = request.user
+                shipping_address.user = request.user
                 shipping_address.is_default = True 
                 shipping_address.save()
 
-                ShippingAddress.objects.filter(customer=request.user).exclude(id=shipping_address.id).update(is_default=False)
+                ShippingAddress.objects.filter(user=request.user).exclude(id=shipping_address.id).update(is_default=False)
 
                 messages.success(request, 'Shipping address added successfully.')
             else:
@@ -244,12 +244,26 @@ def add_shipping_address(request):
 
 @login_required
 def set_default_address(request, address_id):
-    address = get_object_or_404(ShippingAddress, pk=address_id, customer=request.user)
+    address = get_object_or_404(ShippingAddress, pk=address_id, user=request.user)
     address.is_default = True
     address.save()
-    ShippingAddress.objects.filter(customer=request.user).exclude(pk=address_id).update(is_default=False)
+    ShippingAddress.objects.filter(user=request.user).exclude(pk=address_id).update(is_default=False)
     messages.success(request, 'Default address set successfully.')
     return redirect('checkout')
+
+@login_required
+def place_order(request):
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            order = form.save(commit=False)
+            order.user = request.user 
+            order.save()
+            return redirect('payment_gateway')
+    else:
+        form = OrderForm()
+
+    return render(request, 'place_order.html', {'form': form})
 
 
 @login_required

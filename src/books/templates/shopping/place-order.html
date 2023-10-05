@@ -1,0 +1,74 @@
+Certainly! Here's a basic `place-order.html` file that you can use as a starting point for implementing the payment option functionality in your Django project. This template provides options for Cash on Delivery, Card Payment, and UPI Payment:
+
+```html
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Place Your Order</h1>
+    
+    <!-- Payment Method Selection -->
+    <form method="POST" action="{% url 'process_payment' %}">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="payment_method">Select Payment Method:</label>
+            <select class="form-control" id="payment_method" name="payment_method">
+                <option value="cash_on_delivery">Cash on Delivery</option>
+                <option value="card_payment">Card Payment</option>
+                <option value="upi_payment">UPI Payment</option>
+            </select>
+        </div>
+        
+        <!-- Additional Fields for Card Payment -->
+        <div id="card_payment_fields" style="display: none;">
+            <!-- Include fields for card number, CVV, expiration date, etc. -->
+            <!-- Example: -->
+            <div class="form-group">
+                <label for="card_number">Card Number:</label>
+                <input type="text" class="form-control" id="card_number" name="card_number">
+            </div>
+            <!-- Include other card-related fields here -->
+        </div>
+        
+        <!-- Additional Fields for UPI Payment -->
+        <div id="upi_payment_fields" style="display: none;">
+            <!-- Include fields for UPI ID, mobile number, etc. -->
+            <!-- Example: -->
+            <div class="form-group">
+                <label for="upi_id">UPI ID:</label>
+                <input type="text" class="form-control" id="upi_id" name="upi_id">
+            </div>
+            <!-- Include other UPI-related fields here -->
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Place Order</button>
+    </form>
+</div>
+
+<script>
+// JavaScript to show/hide payment fields based on selected payment method
+document.getElementById('payment_method').addEventListener('change', function () {
+    var selectedMethod = this.value;
+    var cardPaymentFields = document.getElementById('card_payment_fields');
+    var upiPaymentFields = document.getElementById('upi_payment_fields');
+    
+    if (selectedMethod === 'card_payment') {
+        cardPaymentFields.style.display = 'block';
+        upiPaymentFields.style.display = 'none';
+    } else if (selectedMethod === 'upi_payment') {
+        cardPaymentFields.style.display = 'none';
+        upiPaymentFields.style.display = 'block';
+    } else {
+        cardPaymentFields.style.display = 'none';
+        upiPaymentFields.style.display = 'none';
+    }
+});
+</script>
+
+{% endblock %}
+```
+
+This template includes a form that allows the user to select a payment method and dynamically displays additional fields based on the selected option (Card Payment or UPI Payment). You can extend and customize this template as needed for your specific payment processing requirements.
+
+Make sure to create the corresponding URL route (`process_payment`) and view function in your Django project to handle the payment processing logic based on the selected method.
