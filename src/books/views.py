@@ -166,6 +166,7 @@ def calculateCartTotal(cart_items):
 
 
 @login_required
+## checkout process need a redesign
 def checkoutView(request):
     user = request.user
     cart_items = Cart.objects.filter(user=user)
@@ -219,6 +220,7 @@ def checkoutView(request):
 
 
 @login_required
+## if want to add new address and change default
 def add_shipping_address(request):
     if request.method == 'POST':
         form = ShippingAddressForm(request.POST)
@@ -243,6 +245,7 @@ def add_shipping_address(request):
     return render(request, 'shopping/add-address.html', {'form': form})
 
 @login_required
+## done before the payment and placing order
 def set_default_address(request, address_id):
     address = get_object_or_404(ShippingAddress, pk=address_id, user=request.user)
     address.is_default = True
@@ -252,6 +255,7 @@ def set_default_address(request, address_id):
     return redirect('checkout')
 
 @login_required
+## should be done on the checkout page 
 def place_order(request):
     if request.method == 'POST':
         form = OrderForm(request.POST)
@@ -267,6 +271,7 @@ def place_order(request):
 
 
 @login_required
+## after the payment is done
 def order_history(request):
     user = request.user
     order_history = OrderHistory.objects.filter(user=user).order_by('-order_date')
