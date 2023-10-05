@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils.text import slugify
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
     
 # form publishing/adding new book
@@ -9,11 +11,18 @@ status = (
     (0, "Draft"),
     (1, "Publish")
 )
+class Genre(models.Model):
+    name = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=100, unique=True)
+    def __str__(self):
+        return self.name
+
+ 
 class Book(models.Model):
     title  		 = models.CharField(max_length=200)
     slug         = models.SlugField(max_length=140, unique=True)
     author 		 = models.CharField(max_length=100)
-    genre   	 = models.CharField(max_length=100)
+    genre        = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True, blank=True)    
     price     	 = models.FloatField(default=0)
     quantity   	 = models.IntegerField(default=0)
     description  = models.TextField(default='No Description', null=True, blank=False)

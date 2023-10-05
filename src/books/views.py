@@ -1,12 +1,11 @@
 from django.shortcuts import redirect, render, get_object_or_404
-from .models import Book, Cart, Order, CustomerRating, ShippingAddress, OrderHistory
+from .models import Book, Cart, Order, CustomerRating, ShippingAddress, OrderHistory, Genre
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
 from .forms import *
 from django.contrib import messages
-from django.http import HttpResponseNotFound
 
 def redirect_to_previous_page(request):
     referring_url = request.META.get('HTTP_REFERER')
@@ -21,7 +20,7 @@ def homeView(request):
     paginator = Paginator(books, 9)
     page = request.GET.get('page')
     books = paginator.get_page(page)
-    genre = Book.objects.values('genre').distinct().order_by('genre')
+    genre = Genre.objects.all().order_by('name')
     context = {'books': books, 'genre':genre}
     search_book = request.GET.get('search')
     if search_book:
@@ -29,10 +28,10 @@ def homeView(request):
         paginator = Paginator(books, 9)
         page = request.GET.get('page')
         books = paginator.get_page(page)
-        genre = Book.objects.values('genre').distinct().order_by('genre')
+        genre = Genre.objects.all().order_by('name')
         if not books:
             books = Book.objects.all()
-            paginator = Paginator(books, 5)
+            paginator = Paginator(books, 9)
             page = request.GET.get('page')
             books = paginator.get_page(page)
             error_message = "No Stories found try something else!"
@@ -40,20 +39,21 @@ def homeView(request):
         return render(request,'index.html',{'books': books,'genre':genre })
     return render(request, 'index.html', context)
 
-def categoryView(request, cats):
-    category_post = Book.objects.filter(genre=cats).order_by('title')
-    genre = Book.objects.values('genre').distinct().order_by('genre')
+def categoryView(request, slug):
+    genreC = get_object_or_404(Genre, slug=slug)
+    category_post = Book.objects.filter(genre=genreC).order_by('title')
+    genre = Genre.objects.all().order_by('name')
     paginator = Paginator(category_post, 10)
     page = request.GET.get('page')
-    books = paginator.get_page(page)
-    context = {'category_post':category_post,'books':books, 'genre':genre}
+    category_post = paginator.get_page(page)
+    context = {'category_post':category_post, 'genre':genre, 'genreC':genreC}
     return render(request, 'category.html',context)
 
 
 
 def bookDetail(request, slug):
     book = get_object_or_404(Book, slug=slug)
-    genre = Book.objects.values('genre').distinct().order_by('genre')
+    genre = Genre.objects.all().order_by('name')
     context = {'book': book, 'genre':genre}
     return render(request, 'book-detail.html', context)
     
@@ -77,7 +77,7 @@ def submitRating(request, slug):
 @login_required
 def cart_view(request):
     cart_items = Cart.objects.filter(user=request.user).order_by('-date_added')
-    genre = Book.objects.values('genre').distinct().order_by('genre')
+    genre = Genre.objects.all().order_by('name')
     if not cart_items:
         messages.error(request, 'Add at least one Story to your cart!')
         return redirect_to_previous_page(request)

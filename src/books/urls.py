@@ -3,7 +3,7 @@ from django.urls import path
 from books import views 
 urlpatterns = [
     path('', views.homeView, name='home'),
-    path('category/<str:cats>', views.categoryView, name='category'),
+    path('category/<slug:slug>', views.categoryView, name='category'),
     path('book/<str:slug>/', views.bookDetail, name='book_detail'),
     path('book/<str:slug>/submit_rating/', views.submitRating, name='submit_rating'),
     path('cart/', views.cart_view, name='cart'),

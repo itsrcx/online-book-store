@@ -25,7 +25,7 @@
             <tr>
                 <td>
                     <img src="{% static 'images/thumbnail.jpg' %}" alt="{{ item.books.title }}" class="img-thumbnail" width="100">
-                    <a href="#"><span class="text-success">{{ item.books.title }}</span></a>
+                    <strong class="text-dark">{{ item.books.title }}</strong>
                 </td>
                 <td>
                     <form method="post" action="{% url 'update_cart' item.id %}">

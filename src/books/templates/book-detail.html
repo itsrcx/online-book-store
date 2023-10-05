@@ -23,7 +23,7 @@
                     <small class="text-dark"><b>
                         <p class="card-text">Author: {{ book.author }}</p>
                         <p class="card-text">Genre: {{ book.genre }}</p>
-                        <p class="card-text">Price: &#8377; {{ book.price }}</p>
+                        <p class="card-text">Quantity:{% if book.quantity > 0 %} {{ book.quantity }}&nbsp;&nbsp; | &nbsp; Price: &#8377; {{ book.price }} {% else %}<span class="text-success"> Out of stock</span>{% endif %}</p>
                         <p class="card-text">Average Rating: {% if book.average_rating %}{{ book.average_rating|floatformat:'0' }}&#9733; out of 5 &#9733;{% else %}Not rated{% endif %}</p>
                     </b></small><br>
                     <div class="d-flex">

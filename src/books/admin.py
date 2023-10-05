@@ -13,4 +13,9 @@ class BooksAdmin(admin.ModelAdmin):
     search_fields = ['title','author','genre']
     prepopulated_fields = {'slug':('title',)}
 
+class GenreAdmin(admin.ModelAdmin):
+    list_display =('name',)
+    prepopulated_fields = {'slug':('name',)}
+
+admin.site.register(models.Genre, GenreAdmin)
 admin.site.register(models.Book, BooksAdmin)
