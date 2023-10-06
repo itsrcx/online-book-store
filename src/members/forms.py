@@ -1,7 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django import forms
-from django.contrib.auth.views import LoginView
 from django.core.exceptions import ValidationError
 
 class NewUserForm(UserCreationForm):
@@ -16,6 +15,17 @@ class NewUserForm(UserCreationForm):
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError("This email address is already in use. Please use a different email.")
         return email
+
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        if len(username) < 3:
+            raise ValidationError("Name should contain at least 3 chracters.")
+        if username[0].isdigit():
+            raise ValidationError("Username cannot start with a numeric character.")
+
+        return username
+        
+                
 
     def save(self, commit=True):
         user = super(NewUserForm, self).save(commit=False)
