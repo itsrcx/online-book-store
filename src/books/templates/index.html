@@ -13,16 +13,23 @@
     <form class="form-inline my-2 ml-5 my-lg-0" role='search', method='get', action="{% url 'home' %}">
         <input class="form-control mr-sm-2" name='search' type="search" placeholder="Find yours" aria-label="Search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
+    </form> 
 </div>
 {% if error_message %}
     <p class="error-message text-danger text-center"><b>{{ error_message }} &#128519;</b></p>
 {% endif %}
-<div class="container mt-4">
-    <div class="row">
+<div class="container-fluid d-flex">
+    <div class="d-flex mt-5">
+        <form method="GET" action="{% url 'home' %}">
+            {{ filter_form|crispy }}
+            <button class="btn btn-outline-success" type="submit">Apply Filters</button>
+        </form>
+    </div>
+<div class="container-fluid">
+    <div class="row">                
         <!-- Product Cards -->
         {% for book in books %}
-        <div class="col-md-4 mb-4">
+        <div class="col-md-2 mb-4">
             <div class="card product-card">
                 <a href="{% url 'book_detail' book.slug %}"><img src="{% static 'images/thumbnail.jpg' %}" class="card-img-top" alt="{{ book.title }}"></a>
                 <div class="card-body">
@@ -48,6 +55,6 @@
         {% endfor %}
     </div>
 </div>
-
+</div>
 
 {% endblock %}

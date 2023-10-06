@@ -21,8 +21,25 @@ def homeView(request):
     page = request.GET.get('page')
     books = paginator.get_page(page)
     genre = Genre.objects.all().order_by('name')
-    context = {'books': books, 'genre':genre}
     search_book = request.GET.get('search')
+    context = {'books': books, 'genre':genre}
+
+    filter_form = BookFilterForm(request.GET)
+    if filter_form.is_valid():
+        min_price = filter_form.cleaned_data.get('min_price')
+        max_price = filter_form.cleaned_data.get('max_price')
+        author = filter_form.cleaned_data.get('author')
+        filters = Q()
+        books = Book.objects.all().order_by('title')
+        if min_price is not None:
+            filters &= Q(price__gte=min_price)
+        if max_price is not None:
+            filters &= Q(price__lte=max_price)
+        if author:
+            filters &= Q(author__icontains=author)
+        books = Book.objects.filter(filters).order_by('title')
+
+    context = {'books': books, 'genre':genre, 'filter_form':filter_form}
     if search_book:
         books = Book.objects.filter(Q(title__icontains=search_book)|Q(author__icontains=search_book)).distinct()
         paginator = Paginator(books, 9)
