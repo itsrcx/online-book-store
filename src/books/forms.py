@@ -1,5 +1,6 @@
 from django import forms
-from .models import ShippingAddress, Order
+from .models import ShippingAddress, Order, Comment
+from django.core.validators import MaxLengthValidator
 
 class ShippingAddressForm(forms.ModelForm):
     class Meta:
@@ -18,3 +19,7 @@ class OrderForm(forms.ModelForm):
                     choices=Order.PAYMENT_METHOD_CHOICES,
                     widget=forms.RadioSelect,)
     
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['name', 'email', 'body']
