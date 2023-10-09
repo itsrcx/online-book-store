@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from .models import Book, Cart, Order, CustomerRating, ShippingAddress, OrderHistory, Genre
 from django.db.models import Q
@@ -54,7 +55,19 @@ def categoryView(request, slug):
 def bookDetail(request, slug):
     book = get_object_or_404(Book, slug=slug)
     genre = Genre.objects.all().order_by('name')
-    context = {'book': book, 'genre':genre}
+    if request.method == 'POST':
+        comment_form = CommentForm(data=request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.book = book
+            new_comment.save()
+            return redirect('book_detail', slug=slug)
+
+    else:
+        comment_form = CommentForm()
+        
+    comments = Comment.objects.filter(book=book, active=True)
+    context = {'book': book, 'genre':genre, 'comments':comments, 'comment_form':comment_form}
     return render(request, 'book-detail.html', context)
     
 @login_required
@@ -73,6 +86,29 @@ def submitRating(request, slug):
         book.average_rating = average_rating
         book.save()
     return redirect('book_detail', slug=slug)
+
+@login_required
+def add_comment(request, slug):
+    book = get_object_or_404(Book, slug=slug)
+    new_comment = None
+
+    if request.method == 'POST':
+        comment_form = CommentForm(data=request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.post = book
+            new_comment.save()
+            return redirect('book_detail', slug=slug)
+
+    else:
+        comment_form = CommentForm()
+        
+    comments = Comment.objects.filter(book=book, active=True)
+
+
+    return redirect (request, 'book-detail.html', {'book':book,
+                                           'comments':comments,
+                                           'comment_form':comment_form})
 
 @login_required
 def cart_view(request):
@@ -166,6 +202,7 @@ def calculateCartTotal(cart_items):
 
 
 @login_required
+## checkout process need a redesign
 def checkoutView(request):
     user = request.user
     cart_items = Cart.objects.filter(user=user)
@@ -219,6 +256,7 @@ def checkoutView(request):
 
 
 @login_required
+## if want to add new address and change default
 def add_shipping_address(request):
     if request.method == 'POST':
         form = ShippingAddressForm(request.POST)
@@ -243,6 +281,7 @@ def add_shipping_address(request):
     return render(request, 'shopping/add-address.html', {'form': form})
 
 @login_required
+## done before the payment and placing order
 def set_default_address(request, address_id):
     address = get_object_or_404(ShippingAddress, pk=address_id, user=request.user)
     address.is_default = True
@@ -252,6 +291,7 @@ def set_default_address(request, address_id):
     return redirect('checkout')
 
 @login_required
+## should be done on the checkout page 
 def place_order(request):
     if request.method == 'POST':
         form = OrderForm(request.POST)
@@ -267,6 +307,7 @@ def place_order(request):
 
 
 @login_required
+## after the payment is done
 def order_history(request):
     user = request.user
     order_history = OrderHistory.objects.filter(user=user).order_by('-order_date')
@@ -278,3 +319,8 @@ def order_history(request):
 
     context = {'order_history': valid_order_history}
     return render(request, 'shopping/order-history.html', context)
+
+
+
+
+    

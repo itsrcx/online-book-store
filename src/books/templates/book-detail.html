@@ -34,7 +34,6 @@
                             <button type="submit" class="btn btn-primary">Add to Cart</button>
                         </form>
                     </div><br>
-                    
                     <!-- Rating Form (Only for Logged-In Users) -->
                     {% if user.is_authenticated %}
                     <form method="post" action="{% url 'submit_rating' book.slug %}">
@@ -45,12 +44,40 @@
                         </div>
                         <button type="submit" class="btn btn-outline-primary">Submit Rating</button>
                     </form>
-                    {% else %}
-                    <p class="text-info"><a href="{% url 'login' %}">Login</a> to in to submit a rating.</p>
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
+    <div class="row mt-5">
+        {% if user.is_authenticated %}
+        <!--Comment HTML-->
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    {% if comments.count < 1 %}<h4 class="card-title text-success">No comments right now.</h4>{% endif %}
+                    {% if comments.count > 1 %}<h4 class="card-title text-success">{{ comments.count }} comments</h4>
+                    {% for comment  in comments %}
+                    <p class="font-weight-bold">{{ comment.name }} | <span class="text-muted font-weight-normal">{{ comment.created_on }}</span></p>
+                    <p>{{ comment.body | linebreaks }}</p>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card p-3">
+                <form method="post" action="{% url 'book_detail' book.slug %}">
+                    {% csrf_token %}
+                    {{ comment_form|crispy }}
+                    <button type="submit" class="btn btn-outline-primary">Add comment</button>
+                </form>
+            </div>
+        </div>
+        
+        {% else %}
+        <p class="text-info">Please! <a href="{% url 'login' %}">Login</a> to in to submit a rating or leave a comment.</p>
+        {% endif %}
+    </div>
 </div>
-{% endblock %}
+{% endblock content %}

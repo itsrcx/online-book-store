@@ -3,6 +3,7 @@ from .forms import NewUserForm
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseNotFound
+from django.contrib.auth import logout
 
 def catch_all_view(request):
     return HttpResponseNotFound("You know this page doesn't exist. 	&#128521; #404")
@@ -18,6 +19,8 @@ class CustomLoginView(LoginView):
 
     def form_valid(self, form):
         remember_me = self.request.POST.get('remember_me')
-        if not remember_me:
+        if remember_me:
+            self.request.session.set_expiry(0)  
+        else:
             self.request.session.set_expiry(1800)  
         return super().form_valid(form)

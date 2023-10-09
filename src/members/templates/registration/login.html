@@ -19,12 +19,11 @@
         {% csrf_token %}
         <div class="form-row justify-content-center">
             <div class="col-6">
-                {{ form.username|as_crispy_field }}
-            </div>
-        </div>
-        <div class="form-row justify-content-center">
-            <div class="col-6">
-                {{ form.password|as_crispy_field }}
+                {% csrf_token %}
+                {{ form.username|as_crispy_field  }}
+                {{ form.username.errors }}
+                {{ form.password|as_crispy_field  }}
+                {{ form.password.errors }}
             </div>
         </div>
         <div class="form-row justify-content-center">
