@@ -56,6 +56,7 @@
             <div class="card">
                 <div class="card-body">
                     {% if comments.count < 1 %}<h4 class="card-title text-success">No comments right now.</h4>{% endif %}
+                    {% if comments.count == 1 %}<h4 class="card-title text-success">{{ comments.count }} comment</h4>
                     {% if comments.count > 1 %}<h4 class="card-title text-success">{{ comments.count }} comments</h4>
                     {% for comment  in comments %}
                     <p class="font-weight-bold">{{ comment.name }} | <span class="text-muted font-weight-normal">{{ comment.created_on }}</span></p>
