@@ -18,6 +18,7 @@
 {% if error_message %}
     <p class="error-message text-danger text-center"><b>{{ error_message }} &#128519;</b></p>
 {% endif %}
+<small>
 <div class="container-fluid d-flex">
     <div class="d-none d-sm-flex col-md-auto mt-5 ">
         <form method="GET" action="{% url 'home' %}">
@@ -29,7 +30,7 @@
         <div class="row">                
             <!-- Product Cards -->
             {% for book in books %}
-            <div class="col-lg-2 col-sm-6 mb-4">
+            <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
                 <div class="card product-card">
                     <a href="{% url 'book_detail' book.slug %}"><img src="{% static 'images/thumbnail.jpg' %}" class="card-img-top" alt="{{ book.title }}"></a>
                     <div class="card-body">
@@ -56,5 +57,5 @@
         </div>
     </div>
 </div>
-
+</small>
 {% endblock %}

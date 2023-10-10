@@ -10,13 +10,12 @@
 
 {% if category_post %}
 <div class='container-fluid my-3 d-flex justify-content-center'>
-    <h2 class="text-success"><b>{{ book.genre }} Stories we have for you </b></h2>
+    <h2 class="text-success"><b>{{ genreC.name }} stories we have for you </b></h2>
     <form class="form-inline my-2 ml-5 my-lg-0" role='search', method='get', action="{% url 'home' %}">
         <input class="form-control mr-sm-2" name='search' type="search" placeholder="Find yours" aria-label="Search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
 </div>
-
 
 <div class="container mt-4">
     <div class="row">
@@ -26,9 +25,12 @@
             <div class="card product-card">
                 <a href="{% url 'book_detail' book.slug %}"><img src="{% static 'images/thumbnail.jpg' %}" class="card-img-top" alt="{{ book.title }}"></a>
                 <div class="card-body">
-                    <a href="{% url 'book_detail' book.slug %}"class="text-success" ><h5 class="card-title">{{ book.title }}</h5></a>
+                    <a href="{% url 'book_detail' book.slug %}"class="text-success card-title h5">{{ book.title }}</a>
                     <small>
-                        <p class="card-text text-info">{{ book.genre }} | <span class="card-text">By: {{ book.author }}</span></p></small><br>
+                        <p class="card-text text-secondary">{{ book.description }}</span></p>
+                    </small><p></p>
+                    <p class="card-text text-info">{{ book.genre }} | <span class="card-text">By: {{ book.author }}</span></p>
+
                         <small class="text-bold">
                             <p class="card-text">Quantity:{% if book.quantity > 0 %} {{ book.quantity }} {% else %}<span class="text-success"> Out of stock</span>{% endif %}</p>
                             <p class="card-text">Price: &#8377; {{ book.price }}</p>
@@ -51,7 +53,7 @@
 
 {% else %}
     <div class="my-4">
-        <strong class="text-danger my-4"><H3>Sorry no books available. </H3></strong>
+        <strong class="text-danger my-4"><H3>Sorry no books available.</H3></strong>
     </div>
 {% endif %}
 
