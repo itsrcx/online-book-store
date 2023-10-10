@@ -8,11 +8,11 @@ Run <code>pip install -r requirements.txt</code><br>
 
 - <p>uncomment: mysql databse in <code>settins.py</code> and comment sqlite3 database</p>
 - <p>add a <code>my.cnf</code> file in following format:<br>
-  <code>[client]
-  database = DB_NAME
-  host = localhost
-  user = DB_USER
-  password = DB_PASSWORD
+  <code>[client]<br>
+  database = DB_NAME<br>
+  host = localhost<br>
+  user = DB_USER<br>
+  password = DB_PASSWORD<br>
   default-character-set = utf8</code>
   </p>
 
