@@ -19,42 +19,42 @@
     <p class="error-message text-danger text-center"><b>{{ error_message }} &#128519;</b></p>
 {% endif %}
 <div class="container-fluid d-flex">
-    <div class="d-flex mt-5">
+    <div class="d-none d-sm-flex col-md-auto mt-5 ">
         <form method="GET" action="{% url 'home' %}">
             {{ filter_form|crispy }}
             <button class="btn btn-outline-success" type="submit">Apply Filters</button>
         </form>
     </div>
-<div class="container-fluid">
-    <div class="row">                
-        <!-- Product Cards -->
-        {% for book in books %}
-        <div class="col-md-2 mb-4">
-            <div class="card product-card">
-                <a href="{% url 'book_detail' book.slug %}"><img src="{% static 'images/thumbnail.jpg' %}" class="card-img-top" alt="{{ book.title }}"></a>
-                <div class="card-body">
-                    <a href="{% url 'book_detail' book.slug %}"class="text-success" ><h5 class="card-title">{{ book.title }}</h5></a>
-                    <small>
-                        <p class="card-text text-info">{{ book.genre }} | <span class="card-text">By: {{ book.author }}</span></p></small><br>
-                        <small class="text-bold">
-                            <p class="card-text">Quantity:{% if book.quantity > 0 %} {{ book.quantity }} {% else %}<span class="text-success"> Out of stock</span>{% endif %}</p>
-                            <p class="card-text">Price: &#8377; {{ book.price }}</p>
-                            <p class="card-text">Average Rating: {% if book.average_rating %}{{ book.average_rating|floatformat:'0' }} &#9733; out of 5 &#9733;{% else %}Not rated{% endif %}</p>
-                        </small><br>
-                    <div class="d-flex">
-                        <form method="post" action="{% url 'add_to_cart' book.slug %}">
-                            {% csrf_token %}
-                            {{ cart_form|crispy }}
-                            <button type="submit" class="btn btn-primary">Add to Cart</button>
-                        </form>
-                        <a href="{% url 'cart' %}" class="btn btn-warning ml-2">Buy</a>
+    <div class="container-fluid">
+        <div class="row">                
+            <!-- Product Cards -->
+            {% for book in books %}
+            <div class="col-lg-2 col-sm-6 mb-4">
+                <div class="card product-card">
+                    <a href="{% url 'book_detail' book.slug %}"><img src="{% static 'images/thumbnail.jpg' %}" class="card-img-top" alt="{{ book.title }}"></a>
+                    <div class="card-body">
+                        <a href="{% url 'book_detail' book.slug %}"class="text-success" ><h5 class="card-title">{{ book.title }}</h5></a>
+                        <small>
+                            <p class="card-text text-info">{{ book.genre }} | <span class="card-text">By: {{ book.author }}</span></p></small><br>
+                            <small class="text-bold">
+                                <p class="card-text">Quantity:{% if book.quantity > 0 %} {{ book.quantity }} {% else %}<span class="text-success"> Out of stock</span>{% endif %}</p>
+                                <p class="card-text">Price: &#8377; {{ book.price }}</p>
+                                <p class="card-text">Average Rating: {% if book.average_rating %}{{ book.average_rating|floatformat:'0' }} &#9733; out of 5 &#9733;{% else %}Not rated{% endif %}</p>
+                            </small><br>
+                        <div class="d-flex">
+                            <form method="post" action="{% url 'add_to_cart' book.slug %}">
+                                {% csrf_token %}
+                                {{ cart_form|crispy }}
+                                <button type="submit" class="btn btn-primary">Add to Cart</button>
+                            </form>
+                            <a href="{% url 'cart' %}" class="btn btn-warning ml-2">Buy</a>
+                        </div>
                     </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
-</div>
 </div>
 
 {% endblock %}

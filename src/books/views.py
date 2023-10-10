@@ -63,6 +63,7 @@ def categoryView(request, slug):
     paginator = Paginator(category_post, 10)
     page = request.GET.get('page')
     category_post = paginator.get_page(page)
+    
     context = {'category_post':category_post, 'genre':genre, 'genreC':genreC}
     return render(request, 'category.html',context)
 
