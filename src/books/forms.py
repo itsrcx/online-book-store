@@ -7,6 +7,29 @@ class ShippingAddressForm(forms.ModelForm):
         model = ShippingAddress
         fields = ['address', 'city', 'state', 'zipcode']
 
+    address = forms.CharField(
+        label='Address',
+        widget=forms.TextInput(attrs={'placeholder': 'Your address'}),
+        max_length=200,
+    )
+    city = forms.CharField(
+        widget=forms.TextInput(attrs={'placeholder': 'City'}),
+        max_length=100,
+    )
+
+    state = forms.CharField(
+        widget=forms.TextInput(attrs={'placeholder': 'State'}),
+        max_length=100,
+    )
+
+    zipcode = forms.CharField(
+        widget=forms.TextInput(attrs={'placeholder': 'Zipcode'}),
+        max_length=20,
+    )
+    def clean_address(self):
+        address = self.cleaned_data['address']
+        return address
+
 class PlaceOrderForm(forms.Form):
     place_order = forms.BooleanField(widget=forms.HiddenInput, initial=True)
 
@@ -43,14 +66,14 @@ class BookFilterForm(forms.Form):
 
         return cleaned_data
 
-class OrderForm(forms.ModelForm):
-    class Meta:
-        model = Order
-        fields = ['payment_method']
+# class OrderForm(forms.ModelForm):
+#     class Meta:
+#         model = Order
+#         fields = ['payment_method']
 
-    payment_method = forms.ChoiceField(
-                    choices=Order.PAYMENT_METHOD_CHOICES,
-                    widget=forms.RadioSelect,)
+#     payment_method = forms.ChoiceField(
+#                     choices=Order.PAYMENT_METHOD_CHOICES,
+#                     widget=forms.RadioSelect,)
     
 class CommentForm(forms.ModelForm):
     class Meta:

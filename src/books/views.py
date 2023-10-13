@@ -42,8 +42,6 @@ def homeView(request):
         paginator = Paginator(books, 12)
         page = request.GET.get('page')
         books = paginator.get_page(page)
-    context = {'books': books, 'genre':genre, 'filter_form':filter_form}
-        
     if search_book:
         books = Book.objects.filter(Q(title__icontains=search_book)|Q(author__icontains=search_book)).distinct()
         paginator = Paginator(books, 12)
@@ -58,6 +56,8 @@ def homeView(request):
             error_message = "No Stories found try something else!"
             return render(request, 'index.html', {'error_message': error_message, 'books': books, 'genre':genre})
         return render(request,'index.html',{'books': books,'genre':genre })
+    context = {'books': books, 'genre':genre, 'filter_form':filter_form}
+        
     return render(request, 'index.html', context)
 
 def categoryView(request, slug):
@@ -137,7 +137,7 @@ def cart_view(request):
     genre = Genre.objects.all().order_by('name')
     if not cart_items:
         messages.error(request, 'Add at least one Story to your cart!')
-        return redirect_to_previous_page(request)
+        return redirect('home')
     total_amount = 0
     for cart_item in cart_items:
         total_amount += cart_item.books.price * cart_item.quantity
@@ -314,17 +314,14 @@ def set_default_address(request, address_id):
 @login_required
 ## should be done on the checkout page 
 def place_order(request):
-    if request.method == 'POST':
-        form = OrderForm(request.POST)
-        if form.is_valid():
-            order = form.save(commit=False)
-            order.user = request.user 
-            order.save()
-            return redirect('payment_gateway')
-    else:
-        form = OrderForm()
-
-    return render(request, 'place_order.html', {'form': form})
+    cart_items = Cart.objects.filter(user=request.user)
+    order = Order.objects.filter(user=request.user)
+    if not cart_items.exists():
+        messages.error('Your cart is empty!')
+        return redirect('cart')
+    order = Order.objects.filter(user=request.user)    
+    cart_items.delete()
+    return redirect('order_history',{'order':order})
 
 
 @login_required
