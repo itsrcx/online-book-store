@@ -1,0 +1,12 @@
+# Use an official MySQL runtime as a parent image
+FROM mysql:latest
+
+# Set environment variables
+ENV MYSQL_ROOT_PASSWORD=root
+ENV MYSQL_DATABASE=testdb
+ENV MYSQL_USER=joyboy
+ENV MYSQL_PASSWORD=password
+
+# Expose MySQL port
+EXPOSE 3306
+

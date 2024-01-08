@@ -1,0 +1,7 @@
+[client]
+database = testdb
+host = db
+user = joyboy
+password = password
+port = 3306
+default-character-set = utf8
