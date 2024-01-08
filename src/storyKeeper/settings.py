@@ -67,19 +67,34 @@ TEMPLATES = [
 WSGI_APPLICATION = 'storyKeeper.wsgi.application'
 
 
-# Database
+# Database default >>>>>>>>>>>>>>>>>>>>>>>>>
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+#C
+#        'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+#}
+
+# for compose >>>>>>>>>>>>>>>>>>>>>>>>>>
 DATABASES = {
-        'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'testdb',
+        'USER': 'joyboy',
+        'PASSWORD': 'password',
+        'HOST': 'db',
+        'PORT': '3306',
     }
 }
+
+
+# DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
 #         'OPTIONS': {
-#             'read_default_file': '/etc/myconf/my.cnf',
+#             'read_default_file': '/home/ghost/Documents/docker-practice/online-book-store/mysql.cnf',
 #         },
 #     }
 # }

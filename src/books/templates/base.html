@@ -31,7 +31,7 @@
                     </a>
                     <div class="dropdown-menu">
                         {% for igenre in genre %}  
-                        <a class="dropdown-item" href="{% url 'category' igenre.slug %}">{{ igenre.name }}</a>
+                        <a class="dropdown-item" href="{% if igenre.slug %}{% url 'category' igenre.slug %}{% endif %}">{{ igenre.name }}</a>
                         {% endfor %}
                     </div>
                 </li>
