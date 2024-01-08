@@ -34,7 +34,7 @@
         <div class="row">                
             <!-- Product Cards -->
             {% for book in books %}
-            <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
+            <div class="col-xl-3 col-md-5 col-sm-7 mb-4">
                 <div class="card product-card">
                     <a href="{% url 'book_detail' book.slug %}"><img src="{% static 'images/thumbnail.jpg' %}" class="card-img-top" alt="{{ book.title }}"></a>
                     <div class="card-body">

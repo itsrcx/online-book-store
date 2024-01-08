@@ -16,7 +16,7 @@ class Genre(models.Model):
 
  
 class Book(models.Model):
-    status = (
+    status_choice = (
     (0, "Draft"),
     (1, "Publish")
     )
@@ -32,7 +32,7 @@ class Book(models.Model):
     updated_on 	 = models.DateTimeField(auto_now=True)
     # book_thumbnail  = models.FileField()
     digital         = models.BooleanField(default=False, null=True, blank=False)
-    status          = models.IntegerField(choices=status,default = 1)
+    status          = models.IntegerField(choices=status_choice,default = 1)
     
     class Meta:
         ordering    = ['-quantity']
@@ -120,13 +120,18 @@ class OrderHistory(models.Model):
     def __str__(self):
         return f"Order {self.id} by {self.user.username} and Amount {self.total_amount}"
 
+ 
 class CustomerRating(models.Model):
-    user   	= models.ForeignKey(User,on_delete=models.CASCADE) 
-    book 	= models.ForeignKey(Book,on_delete=models.CASCADE)
-    rating 	= models.IntegerField(default=1,validators=[MaxValueValidator(5),MinValueValidator(0)])
+    user   	= models.ForeignKey(User, on_delete=models.CASCADE)
+    book 	= models.ForeignKey(Book, on_delete=models.CASCADE)
+    rating 	= models.IntegerField(default=1, validators=[MaxValueValidator(5), MinValueValidator(0)])
+
+    class Meta:
+        unique_together = ('user', 'book')
 
     def __str__(self):
         return f"{self.user.username} - {self.book.title}: {self.rating}"
+
     
 class Comment(models.Model):
     book = models.ForeignKey(Book,on_delete=models.CASCADE,related_name='comments')
