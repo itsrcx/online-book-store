@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}StoryKeeper API{% endblock %}
+
+{% block content %}
+
+{% load static %}
+
+{% load crispy_forms_tags %}
+
+<div>
+    <button class="mt-3 justify-content-center" id="generateTokenButton">Generate API Token</button>
+    <button class="mt-3 justify-content-center" id="copyTokenButton" style="display: none;">Copy Token</button>
+</div>
+
+<div>
+    <p id="tokenDisplay" style="display: none;"></p>
+</div>
+
+<script>
+$(document).ready(function() {
+    $('#generateTokenButton').click(function() {
+        $.ajax({
+            url: '{% url "bookstore:generate_api_token" %}',  <!-- Updated URL name -->
+            method: 'GET',
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function(response) {
+                // Display the token
+                $('#tokenDisplay').text(response.token).show();
+                $('#copyTokenButton').show();
+            },
+            error: function(error) {
+                alert('Error: Unable to generate token');
+            }
+        });
+    });
+
+    $('#copyTokenButton').click(function() {
+        // Copy token to clipboard
+        var tokenText = $('#tokenDisplay').text();
+        var textarea = document.createElement('textarea');
+        textarea.value = tokenText;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+
+        // You can provide feedback to the user that the token is copied if needed
+        alert('Token copied to clipboard: ' + tokenText);
+    });
+});
+
+</script>
+    
+
+{% endblock %}

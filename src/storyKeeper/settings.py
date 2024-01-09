@@ -21,6 +21,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_auth',
     'corsheaders', # for the multi-frontend app 
     'bookstore', # book API for detailed and all books
     'books',
@@ -42,13 +43,13 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'allauth.account.middleware.AccountMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'storyKeeper.urls'
@@ -175,7 +176,6 @@ AUTHENTICATION_CLASSES = (
  
 )
 
-SITE_ID = 1
 # Additional configuration settings
 
 SOCIALACCOUNT_QUERY_EMAIL = True
@@ -202,6 +202,7 @@ SOCIALACCOUNT_PROVIDERS = {
 # Password reset
 
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+SITE_ID = 1
 EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
 
 
@@ -220,13 +221,17 @@ MESSAGE_TAGS = {
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
     ],
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
     ],
-    # 'DEFAULT_AUTHENTICATION_CLASSES': [
-    #     'rest_framework.authentication.TokenAuthentication',
-    # ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [  # new
+        'rest_framework.authentication.TokenAuthentication',
+    ],  
 }
 
 CORS_ALLOWED_ORIGINS = [
