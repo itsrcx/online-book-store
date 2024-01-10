@@ -4,21 +4,42 @@ from books.models import Genre, Book, CustomerRating
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
-        fields = '__all__'
+        fields = ['name']
 
 class BookSerializer(serializers.ModelSerializer):
-    genre = GenreSerializer()
-
+    genre = GenreSerializer() 
     class Meta:
         model = Book
-        fields = '__all__'
+        fields = ['title', 'author', 'price', 'genre', 'description','digital']
 
-class CustomerRatingSerializer(serializers.ModelSerializer):
+class RatingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerRating
-        fields = '__all__'
+        filelds = ['rating']
 
 class UserDataSerializer(serializers.Serializer):
-    genres = GenreSerializer(many=True)
-    books = BookSerializer(many=True)
-    ratings = CustomerRatingSerializer(many=True)
+    user = serializers.SerializerMethodField()
+    rated_books = serializers.SerializerMethodField()
+
+    def get_user(self, obj):
+        user = obj['user']
+        return {
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'full_name': user.first_name + user.last_name 
+        }
+
+    def get_rated_books(self, obj):
+        rated_books = obj['rated_books']
+        book_data = []
+
+        for rating in rated_books:
+            book = rating.book
+            rating_data = {
+                'book': BookSerializer(book).data,
+                'rating': rating.rating,# Add other CustomerRating fields as needed
+            }
+            book_data.append(rating_data)
+
+        return book_data

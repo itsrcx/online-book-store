@@ -1,26 +1,21 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
-from books.models import Genre, Book, CustomerRating
-from .serializers import GenreSerializer, BookSerializer, CustomerRatingSerializer
+from books.models import CustomerRating
+from .serializers import UserDataSerializer
+from django.contrib.auth.models import User
+from rest_framework.permissions import IsAuthenticated
 
 
-class UserDataAPIView(APIView):
-    queryset = Book.objects.all()
+class AllUserDataAPIView(APIView):
     def get(self, request, *args, **kwargs):
-        user = self.request.user  # Assuming you have authentication set up
-        genres = Genre.objects.filter(book__customer_rating__user=user).distinct()
-        books = Book.objects.filter(customer_rating__user=user).distinct()
-        ratings = CustomerRating.objects.filter(user=user)
+        all_users = User.objects.all()
+        user_data = []
 
-        genre_serializer = GenreSerializer(genres, many=True)
-        book_serializer = BookSerializer(books, many=True)
-        rating_serializer = CustomerRatingSerializer(ratings, many=True)
+        for user in all_users:
+            rated_books = CustomerRating.objects.filter(user=user).select_related('book__genre')
+            serialized_data = UserDataSerializer({'user': user, 'rated_books': rated_books}, context={'request': request})
+            user_data.append(serialized_data.data)
 
-        data = {
-            'genres': genre_serializer.data,
-            'books': book_serializer.data,
-            'ratings': rating_serializer.data,
-        }
-
-        return Response(data, status=status.HTTP_200_OK)
+        return Response(user_data)
+    
+#    permission_classes = [IsAuthenticated]

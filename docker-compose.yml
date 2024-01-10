@@ -9,7 +9,7 @@ services:
       MYSQL_USER: joyboy
       MYSQL_PASSWORD: password
     ports:
-      - "3306:3306"
+      - "3306:3366"
     volumes:
       - mysql_data:/var/lib/mysql
 
