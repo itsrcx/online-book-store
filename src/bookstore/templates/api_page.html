@@ -14,8 +14,15 @@
 </div>
 
 <div>
-    <p id="tokenDisplay" style="display: none;"></p>
+    <code id="tokenDisplay" style="display: none;"></code>
 </div>
+<br>
+<hr>
+<br>
+<div>
+    <a class="text-success" id="accessApiButton" href="#" target="_blank">Access Browsable API</a>
+</div>
+
 
 <script>
 $(document).ready(function() {
@@ -50,8 +57,27 @@ $(document).ready(function() {
         // You can provide feedback to the user that the token is copied if needed
         alert('Token copied to clipboard: ' + tokenText);
     });
-});
 
+    
+    $('#accessApiButton').click(function() {
+        // Replace 'http://127.0.0.1:8000/api/your-endpoint/' with your actual API endpoint
+        var apiUrl = 'http://127.0.0.1:8000/api/v1/books/';
+
+        // Get the token from the displayed code element
+        var token = $('#tokenDisplay').text();
+
+        // Make a fetch request with the token in the Authorization header
+        fetch(apiUrl, {
+            headers: {
+                'Authorization': 'Token ' + token
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('API Response:', data);})
+        .catch(error => console.error('Error:', error));
+    });
+});
 </script>
     
 

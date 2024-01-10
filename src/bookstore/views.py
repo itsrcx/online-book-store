@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from rest_framework.authtoken.models import Token
 from django.http import JsonResponse
 from django.shortcuts import render
+from rest_framework.permissions import IsAuthenticated
+
 
 @login_required
 def generate_api_token(request):
@@ -19,6 +21,7 @@ def generate_token_page(request):
 class BookList(generics.ListCreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer 
+    permission_classes = [IsAuthenticated]
 
 class BookDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Book.objects.all()
