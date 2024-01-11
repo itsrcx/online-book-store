@@ -18,4 +18,4 @@ class AllUserDataAPIView(APIView):
 
         return Response(user_data)
     
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]

@@ -1,0 +1,18 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [127.0.0.1:8000] Please Confirm Your Email Address
+From: webmaster@localhost
+To: ramanchauhanxx@gmail.com
+Date: Thu, 11 Jan 2024 05:17:04 -0000
+Message-ID: <170495022478.17.17290202204041387433@0f6f2c24f05e>
+
+Hello from 127.0.0.1:8000!
+
+You're receiving this email because user raman has given your email address to register an account on 127.0.0.1:8000.
+
+To confirm this is correct, go to http://127.0.0.1:8000/api/v1/dj-rest-auth/registration/account-confirm-email/MQ:1rNnRA:SEtX5j8wicoWjG7K2Q5cC_ZUoZPHVZ8fH1c6zBJGkQk/
+
+Thank you for using 127.0.0.1:8000!
+127.0.0.1:8000
+-------------------------------------------------------------------------------

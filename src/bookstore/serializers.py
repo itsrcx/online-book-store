@@ -7,7 +7,7 @@ class GenreSerializer(serializers.ModelSerializer):
         fields = ['name']
 
 class BookSerializer(serializers.ModelSerializer):
-    genre = GenreSerializer() 
+    genre = GenreSerializer(read_only=True) 
     class Meta:
         model = Book
-        fields = ['title', 'author', 'price', 'genre', 'description', 'average_rating', 'digital']
+        fields = ['title', 'author', 'price', 'genre', 'description', 'quantity', 'digital']

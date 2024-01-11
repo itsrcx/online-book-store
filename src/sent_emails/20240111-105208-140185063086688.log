@@ -1,0 +1,21 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [127.0.0.1:8000] Password Reset Email
+From: webmaster@localhost
+To: ramanchauhanxx@gmail.com
+Date: Thu, 11 Jan 2024 05:22:08 -0000
+Message-ID: <170495052866.17.10137147927253097629@0f6f2c24f05e>
+
+Hello from 127.0.0.1:8000!
+
+You're receiving this email because you or someone else has requested a password reset for your user account.
+It can be safely ignored if you did not request a password reset. Click the link below to reset your password.
+
+http://127.0.0.1:8000/accounts/reset/4/c0mwuw-0a93e595b3105a5bcfb329acd849e97a/
+
+In case you forgot, your username is root.
+
+Thank you for using 127.0.0.1:8000!
+127.0.0.1:8000
+-------------------------------------------------------------------------------

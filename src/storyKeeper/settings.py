@@ -19,9 +19,11 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'drf_yasg',
+    'dj_rest_auth.registration',
+    'dj_rest_auth',
     'rest_framework',
     'rest_framework.authtoken',
-    'rest_auth',
     'corsheaders', # for the multi-frontend app 
     'bookstore', # book API for detailed and all books
     'books',
@@ -226,11 +228,12 @@ REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
     ],
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    # ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
+    ],
     'DEFAULT_AUTHENTICATION_CLASSES': [  # new
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ],  
 }
 

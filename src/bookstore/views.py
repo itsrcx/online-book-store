@@ -21,7 +21,6 @@ def generate_token_page(request):
 class BookList(generics.ListCreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer 
-    permission_classes = [IsAuthenticated]
 
 class BookDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Book.objects.all()
