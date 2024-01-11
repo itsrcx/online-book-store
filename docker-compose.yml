@@ -3,13 +3,14 @@ version: '3'
 services:
   db:
     image: mysql:latest
+    container_name: storyKart_db
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: testdb
       MYSQL_USER: joyboy
       MYSQL_PASSWORD: password
     ports:
-      - "3306:3366"
+      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
 
@@ -26,6 +27,7 @@ services:
       - db
     links:
       - db
+    container_name: storyKart_web
 
 volumes:
   mysql_data:
