@@ -5,6 +5,7 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view 
 from rest_framework import permissions
 from django.conf import settings
+from django.conf.urls.static import static
 
 # for open api schema
 schema_view = get_schema_view(
