@@ -1,11 +1,14 @@
 ```md
 # StoryKeeper 📝
 
-![Python](https://img.shields.io/badge/Python-3.8+-blue?style=for-the-badge)
-![Django](https://img.shields.io/badge/Django-4.x-green?style=for-the-badge)
-![MySQL](https://img.shields.io/badge/Database-MySQL-blue?style=for-the-badge)
-![Google OAuth](https://img.shields.io/badge/Auth-Google%20OAuth2-orange?style=for-the-badge)
-![License](https://img.shields.io/github/license/<your-username>/StoryKeeper?style=for-the-badge)
+# StoryKeeper 📝
+
+![Meta](https://img.shields.io/badge/Project-StoryKeeper-blue?style=flat-square)
+![Python](https://img.shields.io/badge/Python-3.8+-blue?style=flat-square)
+![Django](https://img.shields.io/badge/Django-4.x-green?style=flat-square)
+![MySQL](https://img.shields.io/badge/Database-MySQL-blue?style=flat-square)
+![Google OAuth](https://img.shields.io/badge/Auth-Google%20OAuth2-orange?style=flat-square)
+![CSV Import](https://img.shields.io/badge/Data-CSV%20Import-yellow?style=flat-square)
 
 ---
 
