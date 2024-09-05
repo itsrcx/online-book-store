@@ -1,38 +1,116 @@
-# StoryKeeper
+Here’s the full **README.md** code with modern tags and formatting based on the content you provided:
 
-<b>First thing first</b>
-<p>Create a virtual environment</p>
-Run <code>pip install -r requirements.txt</code><br>
+```md
+# StoryKeeper 📝
 
-<b>To use mysql as db:</b>
+![Python](https://img.shields.io/badge/Python-3.8+-blue)
+![Django](https://img.shields.io/badge/Django-4.x-green)
+![MySQL](https://img.shields.io/badge/Database-MySQL-blue)
+![Google OAuth](https://img.shields.io/badge/Auth-Google%20OAuth2-orange)
+![License](https://img.shields.io/github/license/<your-username>/StoryKeeper)
 
-- <p>uncomment: mysql databse in <code>settins.py</code> and comment sqlite3 database</p>
-- <p>add a <code>my.cnf</code> file in following format:<br>
-  <code>[client]<br>
-  database = DB_NAME<br>
-  host = localhost<br>
-  user = DB_USER<br>
-  password = DB_PASSWORD<br>
-  default-character-set = utf8</code>
-  </p>
+---
 
-- <p>add path to your <code>my.cnf</code> file in:<br>
-  <code>'read_default_file': '/path/to/my.cnf'</code>
-  </p>
+## 🚀 **Getting Started**
 
--  <p>run <code>makemigrations</code> and <code>migrate</code> commands in terminal</p>
--  <p>create a <code>superuser</code> and add data manually to MySql DB</p>
+### **1. Create a Virtual Environment**
+```bash
+python -m venv env
+source env/bin/activate  # For Linux/macOS
+# or
+env\Scripts\activate  # For Windows
+```
 
--  <p>run management command <code>python manage.py import_csv_data patch/to/csv</code></p>
-   <p>csv provided in <code>src</code></p>
+### **2. Install Dependencies**
+```bash
+pip install -r requirements.txt
+```
 
-<b>Use of Google Auth</b> 
--  if you want to use google authentecation: 
-    - goto: https://developers.google.com/identity/protocols/oauth2 
-    - login console and create project
-    - put your client_id and secret in<code>SOCIALACCOUNT_PROVIDERS in setting.py</code>
+---
 
+## 🛠️ **Database Configuration**
 
--  other imp. stuff
-    - you can change session time from <code>member.forms</code> to play with
-    - fork if you want to contribute.
+### **MySQL Setup**
+
+#### **Step 1: Update Settings**
+- In `settings.py`, uncomment the MySQL database settings and comment out the SQLite configuration.
+
+#### **Step 2: Create `my.cnf` File**
+- Add a `my.cnf` file with the following format:
+
+```ini
+[client]
+database = DB_NAME
+host = localhost
+user = DB_USER
+password = DB_PASSWORD
+default-character-set = utf8
+```
+
+#### **Step 3: Link MySQL Config**
+- Add the path to your `my.cnf` file in `settings.py`:
+
+```python
+'read_default_file': '/path/to/my.cnf'
+```
+
+#### **Step 4: Migrate the Database**
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+#### **Step 5: Create a Superuser**
+```bash
+python manage.py createsuperuser
+```
+
+#### **Step 6: Import CSV Data**
+- Use the provided CSV file in the `src` folder:
+
+```bash
+python manage.py import_csv_data /path/to/csv
+```
+
+---
+
+## 🔐 **Google Authentication**
+
+### **Step 1: Create a Google Project**
+- Visit the [Google OAuth2 Console](https://developers.google.com/identity/protocols/oauth2) and create a project.
+
+### **Step 2: Update `settings.py`**
+- Add your `client_id` and `client_secret` in the `SOCIALACCOUNT_PROVIDERS` section.
+
+---
+
+## ⚙️ **Additional Customizations**
+
+- You can adjust **session duration** in the `member.forms` file to suit your requirements.
+- Contributions are welcome! Feel free to fork and open a pull request.
+
+---
+
+## 📸 **Project Screenshots**
+
+![Screenshot 1](./path/to/images/1.png)
+![Screenshot 2](./path/to/images/2.png)
+![Screenshot 3](./path/to/images/3.png)
+![Screenshot 4](./path/to/images/4.png)
+![Screenshot 5](./path/to/images/5.png)
+![Screenshot 6](./path/to/images/6.png)
+![Screenshot 7](./path/to/images/7.png)
+![Screenshot 8](./path/to/images/8.png)
+![Screenshot 9](./path/to/images/9.png)
+
+---
+
+## 🤝 **Contributing**
+
+- Fork this repository
+- Create a branch: `git checkout -b <branch_name>`
+- Make your changes and commit them: `git commit -m '<commit_message>'`
+- Push to the branch: `git push origin <branch_name>`
+- Open a pull request
+
+---
