@@ -1,13 +1,13 @@
-Here’s the full **README.md** code with modern tags and formatting based on the content you provided:
+Here’s the updated **README.md** with colored tags and visible screenshots using the images stored in the `project_images` folder. GitHub uses badges for tags, which I've incorporated below.
 
 ```md
 # StoryKeeper 📝
 
-![Python](https://img.shields.io/badge/Python-3.8+-blue)
-![Django](https://img.shields.io/badge/Django-4.x-green)
-![MySQL](https://img.shields.io/badge/Database-MySQL-blue)
-![Google OAuth](https://img.shields.io/badge/Auth-Google%20OAuth2-orange)
-![License](https://img.shields.io/github/license/<your-username>/StoryKeeper)
+![Python](https://img.shields.io/badge/Python-3.8+-blue?style=for-the-badge)
+![Django](https://img.shields.io/badge/Django-4.x-green?style=for-the-badge)
+![MySQL](https://img.shields.io/badge/Database-MySQL-blue?style=for-the-badge)
+![Google OAuth](https://img.shields.io/badge/Auth-Google%20OAuth2-orange?style=for-the-badge)
+![License](https://img.shields.io/github/license/<your-username>/StoryKeeper?style=for-the-badge)
 
 ---
 
@@ -93,15 +93,17 @@ python manage.py import_csv_data /path/to/csv
 
 ## 📸 **Project Screenshots**
 
-![Screenshot 1](./path/to/images/1.png)
-![Screenshot 2](./path/to/images/2.png)
-![Screenshot 3](./path/to/images/3.png)
-![Screenshot 4](./path/to/images/4.png)
-![Screenshot 5](./path/to/images/5.png)
-![Screenshot 6](./path/to/images/6.png)
-![Screenshot 7](./path/to/images/7.png)
-![Screenshot 8](./path/to/images/8.png)
-![Screenshot 9](./path/to/images/9.png)
+<div align="center">
+  <img src="./project_images/1.png" alt="Screenshot 1" width="300" />
+  <img src="./project_images/2.png" alt="Screenshot 2" width="300" />
+  <img src="./project_images/3.png" alt="Screenshot 3" width="300" />
+  <img src="./project_images/4.png" alt="Screenshot 4" width="300" />
+  <img src="./project_images/5.png" alt="Screenshot 5" width="300" />
+  <img src="./project_images/6.png" alt="Screenshot 6" width="300" />
+  <img src="./project_images/7.png" alt="Screenshot 7" width="300" />
+  <img src="./project_images/8.png" alt="Screenshot 8" width="300" />
+  <img src="./project_images/9.png" alt="Screenshot 9" width="300" />
+</div>
 
 ---
 
