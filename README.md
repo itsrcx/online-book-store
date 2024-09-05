@@ -1,5 +1,3 @@
-Here’s the updated **README.md** with colored tags and visible screenshots using the images stored in the `project_images` folder. GitHub uses badges for tags, which I've incorporated below.
-
 ```md
 # StoryKeeper 📝
 
