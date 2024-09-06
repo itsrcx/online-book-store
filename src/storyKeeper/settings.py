@@ -18,7 +18,7 @@ SECRET_KEY = 'django-insecure-!y-+m%b^0f)9$5w&ju8edn8gm6o-298ph2%cp7ru0(x=g#erfr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['storykart.bcohort.com', '3.110.159.143', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['storykart.bcohort.com', '3.110.159.143']
 
 
 # Application definition
