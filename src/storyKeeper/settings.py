@@ -1,4 +1,9 @@
 from pathlib import Path
+import os
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -13,7 +18,7 @@ SECRET_KEY = 'django-insecure-!y-+m%b^0f)9$5w&ju8edn8gm6o-298ph2%cp7ru0(x=g#erfr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['storykart.bcohort.com', '3.110.159.143']
+ALLOWED_HOSTS = ['storykart.bcohort.com', '3.110.159.143', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -78,25 +83,27 @@ WSGI_APPLICATION = 'storyKeeper.wsgi.application'
 # Database default >>>>>>>>>>>>>>>>>>>>>>>>>
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-       'default': {
-       'ENGINE': 'django.db.backends.sqlite3',
-       'NAME': BASE_DIR / 'db.sqlite3',
-   }
-}
-
-# for compose >>>>>>>>>>>>>>>>>>>>>>>>>>
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'testdb',
-#         'USER': 'joyboy',
-#         'PASSWORD': 'password',
-#         'HOST': 'db',
-#         'PORT': '3306',
-#     }
-# }
-
+if os.getenv("DB_HOST"):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DB_NAME'),
+            'USER': os.getenv('DB_USER'),
+            'PASSWORD': os.getenv('DB_PASSWORD'),
+            'HOST': os.getenv('DB_HOST', 'localhost'),  
+            'PORT': os.getenv('DB_PORT', '5432'), 
+            'OPTIONS': {
+                'connect_timeout': 10,
+            },
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # DATABASES = {
 #     'default': {
