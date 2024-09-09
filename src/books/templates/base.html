@@ -43,13 +43,6 @@
             <ul class="navbar-nav ml-auto">
                 {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'bookstore:generate_token_page' %}">
-                        <strong>
-                            API
-                        </strong>
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link">
                         <strong>
                             <i class="fas fa-user"></i>
