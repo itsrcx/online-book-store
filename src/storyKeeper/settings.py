@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'storyKeeper.wsgi.application'
 # Database default >>>>>>>>>>>>>>>>>>>>>>>>>
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-if os.getenv("DB_HOST"):
+if os.getenv("DB_HOST") == "":
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
