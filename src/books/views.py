@@ -30,18 +30,27 @@ def homeView(request):
         min_price = filter_form.cleaned_data.get('min_price')
         max_price = filter_form.cleaned_data.get('max_price')
         author = filter_form.cleaned_data.get('author')
-        filters = Q()
-        books = Book.objects.all().order_by('title')
-        if min_price is not None:
-            filters &= Q(price__gte=min_price)
-        if max_price is not None:
-            filters &= Q(price__lte=max_price)
-        if author:
-            filters &= Q(author__icontains=author)
-        books = Book.objects.filter(filters).order_by('title')
-        paginator = Paginator(books, 12)
-        page = request.GET.get('page')
-        books = paginator.get_page(page)
+        if min_price is not None and max_price is not None and min_price > max_price:
+        # Handle the error, maybe return an error message
+            messages.error(request, "Minimum price cannot be greater than maximum price.")
+        else:
+            # Build the filters
+            filters = Q()
+
+            if min_price is not None:
+                filters &= Q(price__gte=min_price)
+            if max_price is not None:
+                filters &= Q(price__lte=max_price)
+            if author:
+                filters &= Q(author__icontains=author)
+
+            # Apply the filters and order the results
+            books = Book.objects.filter(filters).order_by('title')
+
+            # Pagination
+            paginator = Paginator(books, 12)
+            page = request.GET.get('page')
+            books = paginator.get_page(page)
     if search_book:
         books = Book.objects.filter(Q(title__icontains=search_book)|Q(author__icontains=search_book)).distinct()
         paginator = Paginator(books, 12)

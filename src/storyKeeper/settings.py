@@ -24,6 +24,7 @@ ALLOWED_HOSTS = ['storykart.bcohort.com', '3.110.159.143']
 # Application definition
 
 INSTALLED_APPS = [
+    'aws_xray_sdk.ext.django',
     'drf_yasg',
     'dj_rest_auth.registration',
     'dj_rest_auth',
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'aws_xray_sdk.ext.django.middleware.XRayMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -83,7 +85,7 @@ WSGI_APPLICATION = 'storyKeeper.wsgi.application'
 # Database default >>>>>>>>>>>>>>>>>>>>>>>>>
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-if os.getenv("DB_HOST") == "":
+if os.getenv("DB_HOST"):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -104,6 +106,14 @@ else:
         'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+
+XRAY_RECORDER = {
+    'AUTO_INSTRUMENT': True,
+    'AWS_XRAY_CONTEXT_MISSING': 'LOG_ERROR',
+    'AWS_XRAY_TRACING_NAME': 'book-segment',
+    'PLUGINS': ('EC2Plugin',),
+    'SAMPLING': False,
+}
 
 # DATABASES = {
 #     'default': {
