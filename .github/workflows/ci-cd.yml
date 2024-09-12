@@ -1,0 +1,8 @@
+name: ci-cd-storyKeeper
+on: [push]
+jobs:
+    upload-code-to-server:
+        runs-on: ubuntu-latest
+        steps:
+          - name: 1st-step
+            run: echo "Hello Raman" 
