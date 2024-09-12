@@ -4,7 +4,7 @@ DRY_RUN=$1
 
 echo "Change directory to repo..."
 [ "$DRY_RUN" != "true" ] && cd /home/ubuntu/online-book-store
-
+ls -la
 echo "Pulling latest code from repository..."
 # Skip actual git pull in dry run
 [ "$DRY_RUN" != "true" ] && git pull origin master
