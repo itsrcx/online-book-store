@@ -11,6 +11,7 @@ echo "Pulling latest code from repository..."
 
 echo "Installing dependencies..."
 # Skip actual installation in dry run
+[ "$DRY_RUN" != "true" ] && source .venv/bin/activate
 [ "$DRY_RUN" != "true" ] && pip install -r requirements.txt
 
 echo "CD to source..."
