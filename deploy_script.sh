@@ -6,7 +6,7 @@ if [ ! -d "/home/ubuntu/online-book-store" ]; then
   echo "Directory /home/ubuntu/online-book-store does not exist."
   exit 1
 fi
-
+echo "Directory /home/ubuntu/online-book-store does not exist."
 echo "Change directory to repo..."
 [ "$DRY_RUN" != "true" ] && cd /home/ubuntu/online-book-store
 
