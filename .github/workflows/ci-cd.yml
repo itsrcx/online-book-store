@@ -14,7 +14,7 @@ jobs:
             run: |
                 echo "${{ secrets.BLOGGING_SERVER_SSH_KEY }}" > /tmp/id_rsa.pem
                 chmod 600 /tmp/id_rsa.pem
-                ssh -i /tmp/id_rsa.pem ubuntu@${{ env.DOMAIN }} 'bash -s' < /home/ubuntu/online-book-store/deploy_script.sh true
+                ssh -i /tmp/id_rsa.pem ubuntu@${{ env.DOMAIN }} 'bash -s < /home/ubuntu/online-book-store/deploy_script.sh true'
                 rm /tmp/id_rsa.pem
             env:
                 ACTIONS_RUNNER_DEBUG: true
