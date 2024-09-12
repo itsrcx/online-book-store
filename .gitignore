@@ -5,4 +5,4 @@ __pycache__
 *.pyo
 *.pyd
 *.pyz
-
+deploy_script.sh
