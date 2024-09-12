@@ -10,11 +10,18 @@ jobs:
         steps:
           - name: Checkout repo
             uses: actions/checkout@v2  
-          - name: Run test Deployment
+          - name: Add server to known hosts
             run: |
                 echo "${{ secrets.BLOGGING_SERVER_SSH_KEY }}" > /tmp/id_rsa.pem
                 chmod 600 /tmp/id_rsa.pem
-                ssh -i /tmp/id_rsa.pem ubuntu@${{ env.DOMAIN }} 'bash -s < /home/ubuntu/online-book-store/deploy_script.sh true'
+                mkdir -p ~/.ssh
+                ssh-keyscan -H bcohort.com >> ~/.ssh/known_hosts
+            env:
+                ACTIONS_RUNNER_DEBUG: true
+        
+          - name: Run test Deployment
+            run: |
+                ssh -i /tmp/id_rsa.pem ubuntu@bcohort.com 'bash -s' < /home/ubuntu/online-book-store/deploy_script.sh true
                 rm /tmp/id_rsa.pem
             env:
                 ACTIONS_RUNNER_DEBUG: true
