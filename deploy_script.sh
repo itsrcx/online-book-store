@@ -7,7 +7,7 @@ echo "Change directory to repo..."
 
 echo "Pulling latest code from repository..."
 # Skip actual git pull in dry run
-[ "$DRY_RUN" != "true" ] && git pull origin main
+[ "$DRY_RUN" != "true" ] && git pull origin master
 
 echo "Installing dependencies..."
 # Skip actual installation in dry run
