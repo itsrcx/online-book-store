@@ -6,12 +6,12 @@ jobs:
     upload-code-to-server:
         runs-on: ubuntu-latest
         env:
-            SERVER_IP: 3.110.159.143 
+            DOMAIN: bcohort.com 
         steps:
           - name: Checkout repo
             uses: actions/checkout@v2  
           - name: Run test Deployment
             run: |
-                ssh -i ${{ secrets.BLOGGING_SERVER_SSH_KEY }} ubuntu@${{ env.SERVER_IP }} 'bash -s' < /home/ubuntu/online-book-store/deploy_script.sh true
+                ssh -i ${{ secrets.BLOGGING_SERVER_SSH_KEY }} ubuntu@${{ env.DOMAIN }} 'bash -s' < /home/ubuntu/online-book-store/deploy_script.sh true
             env:
                 ACTIONS_RUNNER_DEBUG: true
