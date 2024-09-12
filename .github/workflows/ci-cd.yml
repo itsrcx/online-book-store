@@ -21,7 +21,7 @@ jobs:
         
           - name: Run test Deployment
             run: |
-                ssh -i /tmp/id_rsa.pem ubuntu@bcohort.com 'bash -s' < /home/ubuntu/online-book-store/deploy_script.sh true
+                ssh -i /tmp/id_rsa.pem ubuntu@bcohort.com 'bash -s < /home/ubuntu/online-book-store/deploy_script.sh true'
                 rm /tmp/id_rsa.pem
             env:
                 ACTIONS_RUNNER_DEBUG: true
