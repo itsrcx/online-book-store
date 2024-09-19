@@ -260,3 +260,15 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:your_frontend_port",  # Replace with your frontend URL CORHEADERS >>>>>>>> multi-froentend
 ]
+
+# settings.py
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'mail.bcohort.com'
+EMAIL_PORT = 587  # Use 587 for TLS, 465 for SSL, or 25 for non-secure (not recommended)
+EMAIL_USE_TLS = True  # Set to True if using port 587 (TLS)
+EMAIL_USE_SSL = False  # Set to True if using port 465 (SSL)
+EMAIL_HOST_USER = 'mail@bcohort.com'
+EMAIL_HOST_PASSWORD = 'password'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
