@@ -85,27 +85,27 @@ WSGI_APPLICATION = 'storyKeeper.wsgi.application'
 # Database default >>>>>>>>>>>>>>>>>>>>>>>>>
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-if os.getenv("DB_HOST"):
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('DB_NAME'),
-            'USER': os.getenv('DB_USER'),
-            'PASSWORD': os.getenv('DB_PASSWORD'),
-            'HOST': os.getenv('DB_HOST', 'localhost'),  
-            'PORT': os.getenv('DB_PORT', '5432'), 
-            'OPTIONS': {
-                'connect_timeout': 10,
-            },
-        }
+# if os.getenv("DB_HOST"):
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.postgresql',
+#             'NAME': os.getenv('DB_NAME'),
+#             'USER': os.getenv('DB_USER'),
+#             'PASSWORD': os.getenv('DB_PASSWORD'),
+#             'HOST': os.getenv('DB_HOST', 'localhost'),  
+#             'PORT': os.getenv('DB_PORT', '5432'), 
+#             'OPTIONS': {
+#                 'connect_timeout': 10,
+#             },
+#         }
+#     }
+# else:
+DATABASES = {
+    'default': {
+    'ENGINE': 'django.db.backends.sqlite3',
+    'NAME': BASE_DIR / 'db.sqlite3',
     }
-else:
-    DATABASES = {
-        'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+}
 
 XRAY_RECORDER = {
     'AUTO_INSTRUMENT': True,
