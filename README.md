@@ -78,6 +78,9 @@ python manage.py import_csv_data /path/to/csv
 
 ---
 
+##  **Packaging**
+- use pip install . for make it as a artifact
+
 ## 📸 **Project Screenshots**
 
 <div align="center">

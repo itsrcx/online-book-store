@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools", "setuptools_scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "story-keeper"
+dynamic = ["version"] 
+description = "A Django-based bookstore application"
+readme = "README.md" 
+license = { file = "LICENSE" }
+authors = [
+    { name = "Raman Chauhan", email = "ramanchauhanxx@gmail.com" }
+]
+
+[project.scripts]
+storykeeper = "storyKeeper.manage:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["books", "bookstore", "members", "userData", "storyKeeper"]
+
+[tool.setuptools_scm]
+write_to = "src/storyKeeper/_version.py"
+fallback_version = "0.1.0"
+local_scheme = "no-local-version"
+version_scheme = "post-release"
+
+[tool.black]
+line-length = 88
+
+[tool.isort]
+profile = "black"
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+[project.optional-dependencies]
+dev = ["black", "isort", "flake8"]
